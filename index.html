@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Относительность движения — интерактивная модель</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__glow ambient__glow--1"></div>
+    <div class="ambient__glow ambient__glow--2"></div>
+    <div class="ambient__grid"></div>
+    <div class="ambient__grid ambient__grid--fine"></div>
+    <div class="ambient__axes" aria-hidden="true"></div>
+  </div>
+
+  <header class="hero">
+    <div class="hero__formulas" aria-hidden="true">
+      <span class="hero__formula hero__formula--a">x = x₀ + vt</span>
+      <span class="hero__formula hero__formula--b">x′ = x − x<sub>опор</sub></span>
+      <span class="hero__formula hero__formula--c">x′<sub>B</sub> = x<sub>B</sub> − x<sub>A</sub></span>
+      <span class="hero__formula hero__formula--d">x′<sub>A</sub> = x<sub>A</sub> − x<sub>B</sub></span>
+      <span class="hero__formula hero__formula--e">v′ = v − v<sub>0</sub></span>
+      <span class="hero__formula hero__formula--f">v<sub>отн</sub> = v<sub>A</sub> − v<sub>B</sub></span>
+      <span class="hero__formula hero__formula--g">Δx = x<sub>B</sub> − x<sub>A</sub></span>
+      <span class="hero__formula hero__formula--h">v′<sub>B</sub> = v<sub>B</sub> − v<sub>A</sub></span>
+      <span class="hero__formula hero__formula--i">в СО машины: v′ = 0</span>
+      <span class="hero__formula hero__formula--j">t′ = t</span>
+      <span class="hero__formula hero__formula--k">равномерное: a = 0</span>
+      <span class="hero__formula hero__formula--l">x(t) = x₀ + vt</span>
+    </div>
+    <div class="hero__content">
+      <p class="hero__eyebrow">Физика · классическая механика</p>
+      <h1 class="hero__title">
+        <span class="hero__title-line">Относительность</span>
+        <span class="hero__title-line hero__title-line--accent">движения на прямой</span>
+      </h1>
+      <p class="hero__lead">
+        Интерактивная лаборатория: две машины на шоссе, три системы отсчёта, одна физическая картина.
+        Меняйте скорости, наблюдайте преобразование координат и убедитесь: покой и движение, вопрос выбора системы отсчёта.
+      </p>
+      <div class="hero__actions">
+        <button type="button" class="btn btn--primary" id="btn-scroll-sim">К симуляции</button>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <div class="hero__stage" aria-hidden="true">
+        <div class="hero__stage-sky"></div>
+        <div class="hero__stage-parallax">
+          <div class="hero__stripes hero__stripes--slow"></div>
+          <div class="hero__stripes hero__stripes--fast"></div>
+        </div>
+        <div class="hero__stage-road"></div>
+        <div class="hero__stage-axis">
+          <span class="hero__tick" style="left: 12%">−20</span>
+          <span class="hero__tick" style="left: 50%">0</span>
+          <span class="hero__tick" style="left: 88%">+20</span>
+        </div>
+        <div class="hero__car-wrap hero__car-wrap--b">
+          <div class="hero__car-body hero__car-body--b"></div>
+          <span class="hero__car-tag">B</span>
+        </div>
+        <div class="hero__car-wrap hero__car-wrap--a">
+          <div class="hero__car-body hero__car-body--a"></div>
+          <span class="hero__car-tag">A</span>
+        </div>
+      </div>
+      <aside class="hero__credit" aria-label="Автор проекта">
+        <div class="hero__credit-glow" aria-hidden="true"></div>
+        <p class="hero__credit-kicker">Автор и разработка</p>
+        <p class="hero__credit-name">Гончаров Евгений</p>
+        <p class="hero__credit-handle mono" lang="en">2612evgenii@gmail.com</p>
+        <div class="hero__credit-meta">
+          <p class="hero__credit-line">
+            <span class="hero__credit-icon" aria-hidden="true">◇</span>
+            Университет ИТМО
+          </p>
+          <p class="hero__credit-line hero__credit-line--faculty">
+            Факультет безопасности информационных технологий
+            <abbr class="hero__credit-abbr" title="Факультет безопасности информационных технологий">ФБИТ</abbr>
+          </p>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="section section--sim" id="sim-section">
+      <div class="section__header">
+        <h2 class="section__title">Модель</h2>
+        <p class="section__subtitle">Координаты и скорости пересчитываются строго относительно выбранной системы отсчёта.</p>
+      </div>
+
+      <div class="layout-sim">
+        <div class="sim-column">
+          <div class="sim-stage">
+            <div class="sim-stage__chrome">
+              <div class="sim-stage__label">
+                <span class="sim-stage__dot"></span>
+                <span id="frame-lock-label">Система отсчёта: дорога</span>
+              </div>
+              <div class="sim-stage__meta">
+                <span class="pill pill--time"><span class="pill__k">t</span> <span id="disp-t">0.00</span> с</span>
+                <span class="pill pill--scale">Масштаб времени ×<span id="disp-timescale">1</span></span>
+              </div>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="sim-canvas" width="1200" height="520" aria-label="Визуализация движения машин"></canvas>
+              <div class="canvas-overlay" id="canvas-overlay"></div>
+            </div>
+          </div>
+
+          <section class="charts-lab charts-lab--in-column" id="charts-lab-section" aria-label="Графики зависимостей">
+            <div class="charts-lab-grid">
+              <article class="chart-block">
+                <header class="chart-block__head">
+                  <h4 class="chart-block__title">Положение x(t) — лабораторная система</h4>
+                  <p class="chart-block__sub">Зависимость координат от времени на дороге: <span class="mono">x = x₀ + vt</span></p>
+                </header>
+                <div class="chart-block__canvas-wrap">
+                  <canvas class="study-canvas" data-chart="road-xt" width="560" height="280" aria-label="График x от t в системе дороги"></canvas>
+                </div>
+              </article>
+              <article class="chart-block">
+                <header class="chart-block__head">
+                  <h4 class="chart-block__title">Положение x′(t) — выбранная система отсчёта</h4>
+                  <p class="chart-block__sub" id="chart-frame-xt-sub">Те же события в координатах наблюдателя: <span id="chart-frame-label">дорога</span></p>
+                </header>
+                <div class="chart-block__canvas-wrap">
+                  <canvas class="study-canvas" data-chart="frame-xt" width="560" height="280" aria-label="График x штрих от t в выбранной системе"></canvas>
+                </div>
+              </article>
+              <article class="chart-block">
+                <header class="chart-block__head">
+                  <h4 class="chart-block__title">Скорость v(t) — лабораторная система</h4>
+                  <p class="chart-block__sub">Равномерное движение: горизонтальные прямые <span class="mono">v = const</span></p>
+                </header>
+                <div class="chart-block__canvas-wrap">
+                  <canvas class="study-canvas" data-chart="road-vt" width="560" height="280" aria-label="График скорости от времени"></canvas>
+                </div>
+              </article>
+              <article class="chart-block">
+                <header class="chart-block__head">
+                  <h4 class="chart-block__title">Разделение Δx(t) = x<sub>B</sub> − x<sub>A</sub></h4>
+                  <p class="chart-block__sub">Как меняется расстояние между машинами вдоль дороги</p>
+                </header>
+                <div class="chart-block__canvas-wrap">
+                  <canvas class="study-canvas" data-chart="delta-xt" width="560" height="280" aria-label="График разности координат от времени"></canvas>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <div class="metrics-block" id="metrics-section" aria-label="Числовые показания симуляции">
+            <div class="metrics-grid metrics-grid--embed">
+              <article class="metric-card metric-card--road">
+                <header class="metric-card__head">
+                  <h3 class="metric-card__title">Дорога (лабораторная система)</h3>
+                  <p class="metric-card__sub">Прямолинейные координаты и скорости без преобразования</p>
+                </header>
+                <dl class="metric-list">
+                  <div class="metric-row"><dt>x<sub>A</sub></dt><dd class="mono val-pulse" id="m-xa-road">0.00 м</dd></div>
+                  <div class="metric-row"><dt>x<sub>B</sub></dt><dd class="mono val-pulse" id="m-xb-road">0.00 м</dd></div>
+                  <div class="metric-row"><dt>v<sub>A</sub></dt><dd class="mono val-pulse" id="m-va-road">0.00 м/с</dd></div>
+                  <div class="metric-row"><dt>v<sub>B</sub></dt><dd class="mono val-pulse" id="m-vb-road">0.00 м/с</dd></div>
+                </dl>
+              </article>
+
+              <article class="metric-card metric-card--frame">
+                <header class="metric-card__head">
+                  <h3 class="metric-card__title" id="metric-frame-title">Выбранная система: дорога</h3>
+                  <p class="metric-card__sub" id="metric-frame-sub">Координаты и скорости после галилеевого переноса</p>
+                </header>
+                <dl class="metric-list">
+                  <div class="metric-row"><dt>x′<sub>A</sub></dt><dd class="mono val-pulse tag-a" id="m-xa-frame">0.00 м</dd></div>
+                  <div class="metric-row"><dt>x′<sub>B</sub></dt><dd class="mono val-pulse tag-b" id="m-xb-frame">0.00 м</dd></div>
+                  <div class="metric-row"><dt>v′<sub>A</sub></dt><dd class="mono val-pulse tag-a" id="m-va-frame">0.00 м/с</dd></div>
+                  <div class="metric-row"><dt>v′<sub>B</sub></dt><dd class="mono val-pulse tag-b" id="m-vb-frame">0.00 м/с</dd></div>
+                </dl>
+              </article>
+
+              <article class="metric-card metric-card--insight">
+                <header class="metric-card__head">
+                  <h3 class="metric-card__title">Сводка</h3>
+                  <p class="metric-card__sub">Связь кинематических величин</p>
+                </header>
+                <dl class="metric-list">
+                  <div class="metric-row"><dt>v<sub>отн</sub> = v<sub>A</sub> − v<sub>B</sub></dt><dd class="mono val-pulse" id="m-vrel-card">0.00 м/с</dd></div>
+                  <div class="metric-row"><dt>Δx = x<sub>B</sub> − x<sub>A</sub></dt><dd class="mono val-pulse" id="m-dx">0.00 м</dd></div>
+                  <div class="metric-row metric-row--note"><dt></dt><dd id="m-frame-note" class="metric-note">В системе машины выбранный автомобиль имеет нулевую скорость.</dd></div>
+                </dl>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel panel--controls">
+          <div class="panel__block">
+            <h3 class="panel__title">Управление воспроизведением</h3>
+            <div class="transport">
+              <button
+                type="button"
+                class="icon-btn icon-btn--playpause is-paused"
+                id="btn-play-pause"
+                title="Запустить симуляцию"
+                aria-label="Запустить или продолжить симуляцию"
+              >
+                <span class="transport__glyph transport__glyph--play" aria-hidden="true">▶</span>
+                <span class="transport__glyph transport__glyph--pause" aria-hidden="true">❚❚</span>
+              </button>
+              <button type="button" class="icon-btn" id="btn-reset" title="Сброс времени" aria-label="Сброс времени">↺</button>
+            </div>
+            <div class="review-controls">
+              <p class="review-controls__hint">На паузе можно листать «запись» до накопленного момента времени; затем снова ▶ — симуляция продолжится с текущего t.</p>
+              <div class="review-controls__row">
+                <button type="button" class="scrub-btn" id="scrub-start" title="К началу" aria-label="Перейти к началу записи">⏮</button>
+                <button type="button" class="scrub-btn" id="scrub-back-5" aria-label="Минус пять секунд">−5&nbsp;с</button>
+                <button type="button" class="scrub-btn" id="scrub-back-1" aria-label="Минус одна секунда">−1&nbsp;с</button>
+                <button type="button" class="scrub-btn" id="scrub-fwd-1" aria-label="Плюс одна секунда">+1&nbsp;с</button>
+                <button type="button" class="scrub-btn" id="scrub-fwd-5" aria-label="Плюс пять секунд">+5&nbsp;с</button>
+                <button type="button" class="scrub-btn" id="scrub-end" title="К концу записи" aria-label="Перейти к концу записи">⏭</button>
+              </div>
+              <label class="field field--scrub">
+                <span class="field__label field__label--scrub">
+                  <span id="scrub-label">t = 0.00 с</span>
+                  <span class="scrub-max" id="scrub-max-label">/ 0.00 с</span>
+                </span>
+                <input type="range" id="scrub-t" min="0" max="0.01" step="0.01" value="0" disabled aria-label="Позиция по времени симуляции" />
+              </label>
+            </div>
+            <label class="field">
+              <span class="field__label">Скорость времени</span>
+              <div class="segmented" id="timescale-group" role="group" aria-label="Скорость времени">
+                <button type="button" class="seg-btn" data-ts="0.5">×0.5</button>
+                <button type="button" class="seg-btn is-active" data-ts="1">×1</button>
+                <button type="button" class="seg-btn" data-ts="2">×2</button>
+                <button type="button" class="seg-btn" data-ts="4">×4</button>
+              </div>
+            </label>
+          </div>
+
+          <div class="panel__block">
+            <h3 class="panel__title">Система отсчёта</h3>
+            <p class="panel__micro">Выберите, относительно чего описывается движение. Визуализация и числа синхронизированы.</p>
+            <div class="frame-switcher" role="tablist" aria-label="Система отсчёта">
+              <button type="button" class="frame-btn is-active" data-frame="road" role="tab" aria-selected="true">Дорога</button>
+              <button type="button" class="frame-btn" data-frame="a" role="tab" aria-selected="false">Машина A</button>
+              <button type="button" class="frame-btn" data-frame="b" role="tab" aria-selected="false">Машина B</button>
+            </div>
+            <div class="relative-meter">
+              <div class="relative-meter__label">Относительная скорость A относительно B</div>
+              <div class="relative-meter__value mono" id="disp-vrel">0.00 м/с</div>
+              <div class="relative-meter__bar"><div class="relative-meter__fill" id="vrel-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="panel__block">
+            <h3 class="panel__title">Начальные условия (дорога)</h3>
+            <div class="sliders-grid">
+              <label class="slider-field">
+                <span class="slider-field__top"><span class="tag tag--a">A</span> Начальное положение x₀<sub>A</sub> (м)</span>
+                <input type="range" id="x0a" min="-80" max="80" step="0.5" value="-20" />
+                <span class="mono slider-field__val" id="val-x0a">-20.0</span>
+              </label>
+              <label class="slider-field">
+                <span class="slider-field__top"><span class="tag tag--b">B</span> Начальное положение x₀<sub>B</sub> (м)</span>
+                <input type="range" id="x0b" min="-80" max="80" step="0.5" value="25" />
+                <span class="mono slider-field__val" id="val-x0b">25.0</span>
+              </label>
+              <label class="slider-field">
+                <span class="slider-field__top"><span class="tag tag--a">A</span> Скорость v<sub>A</sub> (м/с)</span>
+                <input type="range" id="va" min="-35" max="35" step="0.5" value="12" />
+                <span class="mono slider-field__val" id="val-va">12.0</span>
+              </label>
+              <label class="slider-field">
+                <span class="slider-field__top"><span class="tag tag--b">B</span> Скорость v<sub>B</sub> (м/с)</span>
+                <input type="range" id="vb" min="-35" max="35" step="0.5" value="5" />
+                <span class="mono slider-field__val" id="val-vb">5.0</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="panel__block">
+            <h3 class="panel__title">Сценарии</h3>
+            <div class="preset-grid">
+              <button type="button" class="preset-btn" data-preset="rest">Обе машины стоят</button>
+              <button type="button" class="preset-btn" data-preset="chase">Одна догоняет другую</button>
+              <button type="button" class="preset-btn" data-preset="same">Одинаковая скорость</button>
+              <button type="button" class="preset-btn" data-preset="headon">Навстречу друг другу</button>
+              <button type="button" class="preset-btn" data-preset="faster">Одна быстрее</button>
+              <button type="button" class="preset-btn" data-preset="negative">Обратное направление</button>
+            </div>
+          </div>
+
+          <div class="panel__block panel__block--toggles">
+            <h3 class="panel__title">Инструменты наблюдения</h3>
+            <label class="toggle">
+              <input type="checkbox" id="chk-traces" checked />
+              <span class="toggle__ui"></span>
+              <span class="toggle__text">Показывать следы траекторий</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="chk-relative" checked />
+              <span class="toggle__ui"></span>
+              <span class="toggle__text">Подсвечивать относительную координату Δx</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="chk-tooltips" />
+              <span class="toggle__ui"></span>
+              <span class="toggle__text">Всплывающие подсказки на сцене</span>
+            </label>
+            <button type="button" class="btn btn--secondary btn--full" id="btn-physics-meaning">Показать физический смысл</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Учебный проект · Университет ИТМО</p>
+    <p>Гончаров Евгений</p>
+  </footer>
+
+  <div class="modal" id="modal-meaning" hidden>
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button type="button" class="modal__close" data-close-modal aria-label="Закрыть">×</button>
+      <h2 id="modal-title">Физический смысл переключения системы</h2>
+      <p>
+        Когда вы выбираете машину A, вы переносите начало координат в кузов A. Для вас A не движется: её координата равна нулю,
+        а скорость обнуляется. Все остальные тела движутся с пересчитанными скоростями <span class="mono">v′ = v − v<sub>A</sub></span>.
+        Для дороги это означает «поток разметки» с скоростью <span class="mono">−v<sub>A</sub></span>, что и показывает визуализация.
+      </p>
+      <p>
+        Аналогично для машины B. Относительная скорость <span class="mono">v<sub>A</sub> − v<sub>B</sub></span> не зависит от того,
+        какую систему вы выбрали для отображения: это инвариант сравнения двух тел на прямой.
+      </p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast-hint" role="status" aria-live="polite" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
