@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Относительность движения — интерактивная модель</title>
+  <title>Относительность движения, интерактивная модель</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -28,9 +28,9 @@
       <span class="hero__formula hero__formula--f">v<sub>отн</sub> = v<sub>A</sub> − v<sub>B</sub></span>
       <span class="hero__formula hero__formula--g">Δx = x<sub>B</sub> − x<sub>A</sub></span>
       <span class="hero__formula hero__formula--h">v′<sub>B</sub> = v<sub>B</sub> − v<sub>A</sub></span>
-      <span class="hero__formula hero__formula--i">в СО машины: v′ = 0</span>
+      <span class="hero__formula hero__formula--i">в СО машины v′ = 0</span>
       <span class="hero__formula hero__formula--j">t′ = t</span>
-      <span class="hero__formula hero__formula--k">равномерное: a = 0</span>
+      <span class="hero__formula hero__formula--k">равномерное движение, a = 0</span>
       <span class="hero__formula hero__formula--l">x(t) = x₀ + vt</span>
     </div>
     <div class="hero__content">
@@ -40,8 +40,8 @@
         <span class="hero__title-line hero__title-line--accent">движения на прямой</span>
       </h1>
       <p class="hero__lead">
-        Интерактивная лаборатория: две машины на шоссе, три системы отсчёта, одна физическая картина.
-        Меняйте скорости, наблюдайте преобразование координат и убедитесь: покой и движение, вопрос выбора системы отсчёта.
+        Здесь две машины на шоссе и три способа задать координаты, дорога и две привязки к кузовам.
+        Подберите скорости, переключайте систему отсчёта и смотрите, как меняются числа при одном и том же движении.
       </p>
       <div class="hero__actions">
         <button type="button" class="btn btn--primary" id="btn-scroll-sim">К симуляции</button>
@@ -92,7 +92,6 @@
     <section class="section section--sim" id="sim-section">
       <div class="section__header">
         <h2 class="section__title">Модель</h2>
-        <p class="section__subtitle">Координаты и скорости пересчитываются строго относительно выбранной системы отсчёта.</p>
       </div>
 
       <div class="layout-sim">
@@ -101,7 +100,7 @@
             <div class="sim-stage__chrome">
               <div class="sim-stage__label">
                 <span class="sim-stage__dot"></span>
-                <span id="frame-lock-label">Система отсчёта: дорога</span>
+                <span id="frame-lock-label">Система отсчёта · дорога</span>
               </div>
               <div class="sim-stage__meta">
                 <span class="pill pill--time"><span class="pill__k">t</span> <span id="disp-t">0.00</span> с</span>
@@ -118,8 +117,7 @@
             <div class="charts-lab-grid">
               <article class="chart-block">
                 <header class="chart-block__head">
-                  <h4 class="chart-block__title">Положение x(t) — лабораторная система</h4>
-                  <p class="chart-block__sub">Зависимость координат от времени на дороге: <span class="mono">x = x₀ + vt</span></p>
+                  <h4 class="chart-block__title">Положение x(t), лабораторная система</h4>
                 </header>
                 <div class="chart-block__canvas-wrap">
                   <canvas class="study-canvas" data-chart="road-xt" width="560" height="280" aria-label="График x от t в системе дороги"></canvas>
@@ -127,8 +125,7 @@
               </article>
               <article class="chart-block">
                 <header class="chart-block__head">
-                  <h4 class="chart-block__title">Положение x′(t) — выбранная система отсчёта</h4>
-                  <p class="chart-block__sub" id="chart-frame-xt-sub">Те же события в координатах наблюдателя: <span id="chart-frame-label">дорога</span></p>
+                  <h4 class="chart-block__title">Положение x′(t), выбранная система отсчёта</h4>
                 </header>
                 <div class="chart-block__canvas-wrap">
                   <canvas class="study-canvas" data-chart="frame-xt" width="560" height="280" aria-label="График x штрих от t в выбранной системе"></canvas>
@@ -136,8 +133,7 @@
               </article>
               <article class="chart-block">
                 <header class="chart-block__head">
-                  <h4 class="chart-block__title">Скорость v(t) — лабораторная система</h4>
-                  <p class="chart-block__sub">Равномерное движение: горизонтальные прямые <span class="mono">v = const</span></p>
+                  <h4 class="chart-block__title">Скорость v(t), лабораторная система</h4>
                 </header>
                 <div class="chart-block__canvas-wrap">
                   <canvas class="study-canvas" data-chart="road-vt" width="560" height="280" aria-label="График скорости от времени"></canvas>
@@ -146,7 +142,6 @@
               <article class="chart-block">
                 <header class="chart-block__head">
                   <h4 class="chart-block__title">Разделение Δx(t) = x<sub>B</sub> − x<sub>A</sub></h4>
-                  <p class="chart-block__sub">Как меняется расстояние между машинами вдоль дороги</p>
                 </header>
                 <div class="chart-block__canvas-wrap">
                   <canvas class="study-canvas" data-chart="delta-xt" width="560" height="280" aria-label="График разности координат от времени"></canvas>
@@ -172,7 +167,7 @@
 
               <article class="metric-card metric-card--frame">
                 <header class="metric-card__head">
-                  <h3 class="metric-card__title" id="metric-frame-title">Выбранная система: дорога</h3>
+                  <h3 class="metric-card__title" id="metric-frame-title">Выбранная система · дорога</h3>
                   <p class="metric-card__sub" id="metric-frame-sub">Координаты и скорости после галилеевого переноса</p>
                 </header>
                 <dl class="metric-list">
@@ -215,7 +210,7 @@
               <button type="button" class="icon-btn" id="btn-reset" title="Сброс времени" aria-label="Сброс времени">↺</button>
             </div>
             <div class="review-controls">
-              <p class="review-controls__hint">На паузе можно листать «запись» до накопленного момента времени; затем снова ▶ — симуляция продолжится с текущего t.</p>
+              
               <div class="review-controls__row">
                 <button type="button" class="scrub-btn" id="scrub-start" title="К началу" aria-label="Перейти к началу записи">⏮</button>
                 <button type="button" class="scrub-btn" id="scrub-back-5" aria-label="Минус пять секунд">−5&nbsp;с</button>
@@ -245,14 +240,13 @@
 
           <div class="panel__block">
             <h3 class="panel__title">Система отсчёта</h3>
-            <p class="panel__micro">Выберите, относительно чего описывается движение. Визуализация и числа синхронизированы.</p>
             <div class="frame-switcher" role="tablist" aria-label="Система отсчёта">
               <button type="button" class="frame-btn is-active" data-frame="road" role="tab" aria-selected="true">Дорога</button>
               <button type="button" class="frame-btn" data-frame="a" role="tab" aria-selected="false">Машина A</button>
               <button type="button" class="frame-btn" data-frame="b" role="tab" aria-selected="false">Машина B</button>
             </div>
             <div class="relative-meter">
-              <div class="relative-meter__label">Относительная скорость A относительно B</div>
+              <div class="relative-meter__label">Скорость A относительно B</div>
               <div class="relative-meter__value mono" id="disp-vrel">0.00 м/с</div>
               <div class="relative-meter__bar"><div class="relative-meter__fill" id="vrel-fill"></div></div>
             </div>
@@ -313,7 +307,6 @@
               <span class="toggle__ui"></span>
               <span class="toggle__text">Всплывающие подсказки на сцене</span>
             </label>
-            <button type="button" class="btn btn--secondary btn--full" id="btn-physics-meaning">Показать физический смысл</button>
           </div>
         </aside>
       </div>
@@ -324,23 +317,6 @@
     <p>Учебный проект · Университет ИТМО</p>
     <p>Гончаров Евгений</p>
   </footer>
-
-  <div class="modal" id="modal-meaning" hidden>
-    <div class="modal__backdrop" data-close-modal></div>
-    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <button type="button" class="modal__close" data-close-modal aria-label="Закрыть">×</button>
-      <h2 id="modal-title">Физический смысл переключения системы</h2>
-      <p>
-        Когда вы выбираете машину A, вы переносите начало координат в кузов A. Для вас A не движется: её координата равна нулю,
-        а скорость обнуляется. Все остальные тела движутся с пересчитанными скоростями <span class="mono">v′ = v − v<sub>A</sub></span>.
-        Для дороги это означает «поток разметки» с скоростью <span class="mono">−v<sub>A</sub></span>, что и показывает визуализация.
-      </p>
-      <p>
-        Аналогично для машины B. Относительная скорость <span class="mono">v<sub>A</sub> − v<sub>B</sub></span> не зависит от того,
-        какую систему вы выбрали для отображения: это инвариант сравнения двух тел на прямой.
-      </p>
-    </div>
-  </div>
 
   <div class="toast" id="toast-hint" role="status" aria-live="polite" hidden></div>
 

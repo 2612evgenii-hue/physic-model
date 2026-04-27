@@ -37,7 +37,6 @@
     lastTs: 0,
     // Visual transition when frame changes (lerp screen positions)
     transition: { active: false, start: 0, duration: 520, from: { a: 0, b: 0 }, to: { a: 0, b: 0 } },
-    showedHint: false,
     /** Max simulation time reached in this run (for pause / scrub review) */
     tRecorded: 0,
     /** While user drags the time slider, tick() must not overwrite the value */
@@ -47,21 +46,21 @@
   };
 
   const FRAME_LABELS = {
-    road: "Система отсчёта: дорога",
-    a: "Система отсчёта: машина A",
-    b: "Система отсчёта: машина B",
+    road: "Система отсчёта · дорога",
+    a: "Система отсчёта · машина A",
+    b: "Система отсчёта · машина B",
   };
 
   const FRAME_TITLES = {
-    road: "Выбранная система: дорога",
-    a: "Выбранная система: машина A",
-    b: "Выбранная система: машина B",
+    road: "Выбранная система · дорога",
+    a: "Выбранная система · машина A",
+    b: "Выбранная система · машина B",
   };
 
   const FRAME_SUBS = {
     road: "Координаты совпадают с лабораторной дорогой",
-    a: "Начало в кузове A — она покоится, остальные движутся относительно неё",
-    b: "Начало в кузове B — она покоится, остальные движутся относительно неё",
+    a: "Начало в кузове A, она покоится, остальные движутся относительно неё",
+    b: "Начало в кузове B, она покоится, остальные движутся относительно неё",
   };
 
   // --- DOM ---
@@ -358,7 +357,8 @@
       const d = k.xb - k.xa;
       const x1 = sxA;
       const x2 = sxB;
-      const midY = axisY + 58;
+      /* На узком canvas axisY+58 уходит за нижний край — подпись и линия пропадают */
+      const midY = Math.max(axisY + 10, Math.min(axisY + 58, h - 22));
       ctx.strokeStyle = "rgba(167,139,250,0.85)";
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -373,28 +373,7 @@
       ctx.textBaseline = "alphabetic";
     }
 
-    // Tooltips overlay HTML
-    if (state.tooltips) {
-      overlay.innerHTML = "";
-      const tip = (sx, text, topPct) => {
-        const el = document.createElement("div");
-        el.className = "canvas-tip";
-        el.textContent = text;
-        el.style.cssText =
-          "position:absolute;left:" +
-          (sx / w) * 100 +
-          "%;top:" +
-          topPct +
-          "%;transform:translate(-50%,0);background:rgba(12,14,24,0.92);border:1px solid rgba(255,255,255,0.12);padding:6px 10px;border-radius:10px;font-size:11px;pointer-events:none;white-space:nowrap;";
-        overlay.appendChild(el);
-      };
-      tip(sxA, "A: x′=" + proj.k.xa.toFixed(2) + " м", 42);
-      tip(sxB, "B: x′=" + proj.k.xb.toFixed(2) + " м", 42);
-    } else {
-      overlay.innerHTML = "";
-    }
-
-    // Frame lock badge — width from text metrics, extra gap above car label
+    // Frame lock badge — чуть выше области HTML-подсказок (42% сверху), без сдвига самих подсказок
     if (state.frame === "a" || state.frame === "b") {
       const fixed = state.frame === "a" ? sxA : sxB;
       const badgeText = "покой в собственной СО";
@@ -405,7 +384,10 @@
       const bw = Math.ceil(tw + padX * 2);
       const bh = 24;
       const bx = fixed - bw / 2;
-      const by = carY - 50 - bh;
+      const tooltipTopPx = h * 0.42;
+      const byNearCar = carY - 62 - bh;
+      const byAboveTips = tooltipTopPx - bh - 8;
+      const by = Math.max(6, Math.min(byNearCar, byAboveTips));
       ctx.fillStyle = "rgba(94,243,192,0.12)";
       ctx.strokeStyle = "rgba(94,243,192,0.45)";
       ctx.lineWidth = 1;
@@ -417,6 +399,28 @@
       ctx.textBaseline = "middle";
       ctx.fillText(badgeText, fixed, by + bh / 2);
       ctx.textBaseline = "alphabetic";
+    }
+
+    // Tooltips — фиксированная вертикаль; бейдж сдвигается вверх, а не подсказки вниз
+    if (state.tooltips) {
+      overlay.innerHTML = "";
+      const topPct = 42;
+      const tip = (sx, text, tp) => {
+        const div = document.createElement("div");
+        div.className = "canvas-tip";
+        div.textContent = text;
+        div.style.cssText =
+          "position:absolute;left:" +
+          (sx / w) * 100 +
+          "%;top:" +
+          tp +
+          "%;transform:translate(-50%,0);background:rgba(12,14,24,0.92);border:1px solid rgba(255,255,255,0.12);padding:6px 10px;border-radius:10px;font-size:11px;pointer-events:none;white-space:nowrap;";
+        overlay.appendChild(div);
+      };
+      tip(sxA, "A · x′ = " + proj.k.xa.toFixed(2) + " м", topPct);
+      tip(sxB, "B · x′ = " + proj.k.xb.toFixed(2) + " м", topPct);
+    } else {
+      overlay.innerHTML = "";
     }
   }
 
@@ -676,27 +680,6 @@
         c.stroke();
       });
     });
-
-    c.fillStyle = "rgba(255,255,255,0.32)";
-    c.font = "9px Outfit, sans-serif";
-    c.textAlign = "left";
-    c.textBaseline = "alphabetic";
-    c.fillText("аналитически по формулам кинематики", L + 2, cssH - 5);
-
-    // Legend — color swatch left of label (measureText avoids overlap on single-series charts)
-    c.font = "600 10px Outfit, sans-serif";
-    c.textAlign = "right";
-    const lx = L + plotW - 8;
-    const swW = 12;
-    const swGap = 7;
-    series.forEach((s, i) => {
-      const ly = T + 12 + i * 16;
-      const tw = c.measureText(s.legend).width;
-      c.fillStyle = s.color;
-      c.fillRect(lx - tw - swGap - swW, ly - 5, swW, 3);
-      c.fillStyle = "rgba(255,255,255,0.55)";
-      c.fillText(s.legend, lx, ly);
-    });
   }
 
   function drawAllStudyCharts() {
@@ -789,12 +772,6 @@
         });
       }
     });
-
-    const fl = document.getElementById("chart-frame-label");
-    if (fl) {
-      const names = { road: "дорога", a: "машина A", b: "машина B" };
-      fl.textContent = names[state.frame] || state.frame;
-    }
   }
 
   // --- History sample ---
@@ -870,8 +847,8 @@
     el("frame-lock-label").textContent = FRAME_LABELS[state.frame];
 
     let note = "";
-    if (state.frame === "a") note = "В системе A: v′A = 0, дорога «течёт» со скоростью −vA вдоль оси.";
-    else if (state.frame === "b") note = "В системе B: v′B = 0, относительная картина симметрична системе A.";
+    if (state.frame === "a") note = "В системе A имеем v′A = 0, дорога «течёт» со скоростью −vA вдоль оси.";
+    else if (state.frame === "b") note = "В системе B имеем v′B = 0, картина симметрична системе A.";
     else note = "В лабораторной системе видны обе скорости относительно шоссе.";
     el("m-frame-note").textContent = note;
   }
@@ -1056,20 +1033,6 @@
     state.tooltips = e.target.checked;
   });
 
-  el("btn-physics-meaning").addEventListener("click", () => {
-    el("modal-meaning").hidden = false;
-  });
-  document.querySelectorAll("[data-close-modal]").forEach((n) => {
-    n.addEventListener("click", () => {
-      el("modal-meaning").hidden = true;
-    });
-  });
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && el("modal-meaning") && !el("modal-meaning").hidden) {
-      el("modal-meaning").hidden = true;
-    }
-  });
-
   el("btn-scroll-sim").addEventListener("click", () => {
     el("sim-section").scrollIntoView({ behavior: "smooth" });
   });
@@ -1098,11 +1061,6 @@
   updateMetrics();
   syncPlaybackButton();
   syncScrubUI();
-
-  if (!state.showedHint) {
-    state.showedHint = true;
-    setTimeout(() => showToast("Подсказка: смените систему отсчёта и сравните карточки чисел"), 1200);
-  }
 
   requestAnimationFrame(tick);
 
