@@ -3334,45 +3334,45 @@
       ayb: 0,
     }),
     "plane-cross": () => ({
-      x0a: -38,
-      y0a: -6,
-      va: 14,
-      vya: 2,
+      x0a: -35,
+      y0a: 0,
+      va: 12,
+      vya: 0,
       aa: 0,
       aya: 0,
-      x0b: -8,
-      y0b: 26,
-      vb: 4,
-      vyb: -14,
+      x0b: 5,
+      y0b: -30,
+      vb: 0,
+      vyb: 10,
       ab: 0,
       ayb: 0,
     }),
-    "plane-overtake": () => ({
-      x0a: -45,
-      y0a: 2,
-      va: 16,
-      vya: 6,
-      aa: -0.35,
+    "plane-parallel": () => ({
+      x0a: -30,
+      y0a: -8,
+      va: 9,
+      vya: 4.2,
+      aa: 0,
       aya: 0,
-      x0b: -5,
-      y0b: -4,
-      vb: 11,
-      vyb: 1,
+      x0b: -28,
+      y0b: 8,
+      vb: 7.5,
+      vyb: 2.7,
       ab: 0,
       ayb: 0,
     }),
-    "plane-drift": () => ({
-      x0a: -25,
-      y0a: 0,
-      va: 8,
-      vya: 3,
-      aa: 1.2,
+    "plane-accel": () => ({
+      x0a: -30,
+      y0a: -10,
+      va: 13.5,
+      vya: 3.6,
+      aa: -0.8,
       aya: 0,
-      x0b: 18,
-      y0b: 12,
-      vb: 10.3,
-      vyb: -9,
-      ab: -0.6,
+      x0b: 20,
+      y0b: -15,
+      vb: -2.1,
+      vyb: 5.6,
+      ab: 0.5,
       ayb: 0,
     }),
   };
@@ -3386,6 +3386,7 @@
         return;
       }
       if (state.dimensionMode !== "plane") setDimensionMode("plane");
+      state.planeMotionMode = "ray";
     }
     const p = gen();
     Object.assign(state, p);
@@ -3471,6 +3472,42 @@
 
   el("btn-scroll-sim").addEventListener("click", () => {
     el("sim-section").scrollIntoView({ behavior: "smooth" });
+  });
+
+  /* ── Smooth expand / collapse for <details class="model-guide"> ── */
+  document.querySelectorAll(".model-guide").forEach((details) => {
+    const summary = details.querySelector(".model-guide__toggle");
+    const wrap = details.querySelector(".model-guide__body-wrap");
+    if (!summary || !wrap) return;
+
+    summary.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (details.open) {
+        // Collapse
+        const h = wrap.scrollHeight;
+        wrap.style.height = h + "px";
+        wrap.offsetHeight; // force reflow
+        wrap.style.height = "0";
+        details.classList.remove("is-expanding");
+        wrap.addEventListener("transitionend", function onEnd() {
+          wrap.removeEventListener("transitionend", onEnd);
+          details.open = false;
+          wrap.style.height = "";
+        });
+      } else {
+        // Expand
+        details.open = true;
+        details.classList.add("is-expanding");
+        const h = wrap.scrollHeight;
+        wrap.style.height = "0";
+        wrap.offsetHeight; // force reflow
+        wrap.style.height = h + "px";
+        wrap.addEventListener("transitionend", function onEnd() {
+          wrap.removeEventListener("transitionend", onEnd);
+          wrap.style.height = "";
+        });
+      }
+    });
   });
 
   function showToast(msg) {
@@ -6518,7 +6555,7 @@
       ctx.textAlign = "left";
       ctx.fillText("внутри корабля", bx + mirrorW / 2 + 10, by - 8);
 
-      ctx.fillStyle = "rgba(212,166,106,0.6)";
+      ctx.fillStyle = "rgba(125,196,168,0.6)";
       ctx.textAlign = "left";
       ctx.fillText("внешний наблюдатель", triPadL, h - 10);
 

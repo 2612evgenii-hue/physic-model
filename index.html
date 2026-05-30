@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=34" />
+  <link rel="stylesheet" href="style.css?v=37" />
 </head>
 <body class="sim-site-line">
   <div class="ambient" aria-hidden="true">
@@ -142,32 +142,33 @@
               <p class="model-theory__kicker">Модель 1 · одна ось</p>
               <h3 class="model-theory__title" id="theory-line-title">Движение по прямой</h3>
               <p class="model-theory__lead">
-                Наглядный «коридорный» стенд: две машины на одной дороге, три системы отсчёта и те же галилеевы правила, что и в полной лаборатории — только без плоскости
-                <span class="mono">xy</span>. Идеально, чтобы сначала освоить язык координат, скоростей и переходов между СО.
+                Одна дорога, две машины и вопрос, который кажется простым: кто из них движется? Ответ зависит от того, кого вы спросите. Этот стенд позволяет увидеть, как одна и та же ситуация выглядит из разных систем отсчёта.
               </p>
             </header>
 
             <div class="model-theory__body">
               <section class="theory-card">
-                <h4 class="theory-card__h">О чём эта тема</h4>
+                <h4 class="theory-card__h">Зачем это нужно</h4>
                 <p class="theory-card__p">
-                  Классическая <strong>кинематика на прямой</strong>: положение и скорость меняются во времени по заданным начальным условиям; при ненулевом ускорении — равномерно ускоренное движение. Второй слой —
-                  <strong>принцип относительности Галилея</strong>: законы в инерциальных системах одинаковы, а координаты и скорости в разных СО связены простым сдвигом на скорость опорной точки.
+                  Вы сидите в поезде и смотрите в окно. Платформа «едет» назад. Для людей на платформе едете вы. Кто прав? Оба. Это <strong>принцип относительности Галилея</strong>: законы физики одинаковы в любой инерциальной системе отсчёта. Нет «правильной» точки наблюдения. Есть разные, и каждая по-своему описывает одно и то же движение.
+                </p>
+                <p class="theory-card__p">
+                  На прямой эта идея проявляется в чистом виде. Одна координата, одна скорость, одно ускорение. Минимум переменных, максимум ясности. Начните отсюда, и переход к плоскости покажется естественным.
                 </p>
               </section>
 
               <section class="theory-card theory-card--accent">
-                <h4 class="theory-card__h">Лабораторный стенд в интерфейсе</h4>
-                <ul class="theory-list">
-                  <li><span class="theory-list__mark" aria-hidden="true"></span>Дорога как ось <span class="mono">x</span>, две машины <span class="mono">A</span> и <span class="mono">B</span>.</li>
-                  <li><span class="theory-list__mark" aria-hidden="true"></span>Три инерциальные СО: <strong>дорога</strong>, связанная с <strong>A</strong> и с <strong>B</strong>.</li>
-                  <li><span class="theory-list__mark" aria-hidden="true"></span>Ползунки начальных координат, скоростей и ускорений; запись времени и графики <span class="mono">x(t)</span>, <span class="mono">v(t)</span>.</li>
-                  <li><span class="theory-list__mark" aria-hidden="true"></span>Мини-сцена и подписи показывают, как выбранная СО «перекраивает» числа, не ломая физику.</li>
-                </ul>
+                <h4 class="theory-card__h">Что на экране</h4>
+                <p class="theory-card__p">
+                  Дорога играет роль оси <span class="mono">x</span>. По ней едут две машины, <span class="mono">A</span> и <span class="mono">B</span>. У каждой свои начальная координата, скорость и ускорение. Вы задаёте их ползунками, нажимаете «воспроизведение» и наблюдаете.
+                </p>
+                <p class="theory-card__p">
+                  Самое интересное начинается при переключении системы отсчёта. Выберите СО машины A, и она «замрёт», а весь мир поедет вокруг неё. Числа в метриках пересчитаются, графики перестроятся, но физика не изменится. Это галилеево преобразование в действии: вы буквально видите, как одни и те же события описываются разными числами.
+                </p>
               </section>
 
               <section class="theory-card">
-                <h4 class="theory-card__h">Ключевые формулы</h4>
+                <h4 class="theory-card__h">Математика за кулисами</h4>
                 <div class="theory-formula-grid">
                   <div class="theory-eq" role="presentation">
                     <span class="theory-eq__label">положение</span>
@@ -183,30 +184,29 @@
                   <div class="theory-eq theory-eq--wide" role="presentation">
                     <span class="theory-eq__label">преобразование Галилея</span>
                     <p class="theory-eq__math mono">x′ = x − V t, &nbsp; v′ = v − V, &nbsp; t′ = t</p>
-                    <p class="theory-eq__note">здесь <span class="mono">V</span> — скорость выбранной опорной системы относительно дороги (для СО машины <span class="mono">A</span> или <span class="mono">B</span> подставляется её скорость).</p>
+                    <p class="theory-eq__note"><span class="mono">V</span> — скорость выбранной опорной системы. В СО машины A подставляется скорость A, в СО машины B — скорость B. Время общее для всех систем отсчёта (в классической механике оно абсолютно).</p>
                   </div>
                   <div class="theory-eq theory-eq--wide" role="presentation">
-                    <span class="theory-eq__label">относительная скорость и разность координат</span>
+                    <span class="theory-eq__label">относительная скорость и расстояние</span>
                     <p class="theory-eq__math mono">v<sub>отн</sub> = v<sub>A</sub> − v<sub>B</sub>, &nbsp; Δx = x<sub>B</sub> − x<sub>A</sub></p>
                   </div>
                 </div>
               </section>
 
               <section class="theory-card">
-                <h4 class="theory-card__h">Что можно исследовать</h4>
-                <div class="theory-chips">
-                  <span class="theory-chip">Перейти в СО машины и убедиться: в «своей» системе её <span class="mono">v′ = 0</span></span>
-                  <span class="theory-chip">Сравнить обгон и встречу при разных <span class="mono">v<sub>A</sub></span>, <span class="mono">v<sub>B</sub></span></span>
-                  <span class="theory-chip">Включить ускорения <span class="mono">a</span> и проследить параболу на <span class="mono">x(t)</span></span>
-                  <span class="theory-chip">Понаблюдать, как меняются подписи и графики при смене СО — без смены реального движения по дороге</span>
-                </div>
+                <h4 class="theory-card__h">Попробуйте сами</h4>
+                <p class="theory-card__p">
+                  Задайте машинам одинаковые скорости и переключитесь в СО одной из них. Вторая замрёт рядом: они неподвижны друг относительно друга, хотя обе «едут». Теперь добавьте разницу в скорости. В лабораторной системе обе машины движутся вперёд, но в системе A машина B медленно отстаёт или обгоняет. Одно движение, два описания.
+                </p>
+                <p class="theory-card__p">
+                  Включите ускорение, и на графике <span class="mono">x(t)</span> появится парабола. Переключите систему отсчёта и посмотрите, как кривизна «переезжает» с одного графика на другой. Графики не врут, просто каждая система отсчёта по-своему пересказывает одну и ту же историю.
+                </p>
               </section>
 
               <aside class="theory-callout">
-                <strong class="theory-callout__title">Как читать интерфейс</strong>
+                <strong class="theory-callout__title">Совет</strong>
                 <p class="theory-callout__p">
-                  Запустите воспроизведение, покрутите время скрабом и переключайте вкладки систем отсчёта: обратите внимание на согласованность «живой» сцены, чисел в метриках и графиков — это и есть проверка
-                  галилеевой картины на одной оси.
+                  Включите следы траекторий и отображение расстояния между машинами. Так проще увидеть, как параметры движения связаны с картинкой на сцене. Скраб времени позволяет прокрутить анимацию вручную и разглядеть любой момент в деталях.
                 </p>
               </aside>
             </div>
@@ -217,74 +217,263 @@
               <p class="model-theory__kicker">Модель 2 · плоскость</p>
               <h3 class="model-theory__title" id="theory-lab-title">Движение на плоскости</h3>
               <p class="model-theory__lead">
-                Полноценная «столешница» <span class="mono">xy</span>: векторы скорости и ускорения, траектории, режим движения вдоль луча или <strong>по заданной ломаной</strong>, расширенные графики и метрики. Всё то же
-                галилеево преобразование — уже для радиус-векторов и векторов скорости.
+                На прямой всё сводилось к «вперёд или назад». Здесь машины могут ехать в любом направлении, пересекаться под углом и расходиться. Появляется второе измерение, а вместе с ним и новый режим: вы сами рисуете маршрут, по которому поедет машина.
               </p>
             </header>
 
             <div class="model-theory__body">
               <section class="theory-card">
-                <h4 class="theory-card__h">О чём эта тема</h4>
+                <h4 class="theory-card__h">Зачем вторая ось</h4>
                 <p class="theory-card__p">
-                  В плоскости положение описывается парой <span class="mono">(x, y)</span>, скорость — компонентами <span class="mono">(v<sub>x</sub>, v<sub>y</sub>)</span> или модулем и углом. Суперпозиция движений по осям даёт
-                  произвольную прямолинейную траекторию; при постоянном векторе ускорения — парабола в плоскости (общий случай баллистики здесь не обязателен, но закономерность та же).
+                  Стоит добавить второе измерение, и появляются вещи, которых на одной оси в принципе не увидишь. Две машины могут сближаться, хотя обе едут «вперёд», просто под разными углами. Скорость раскладывается на компоненты <span class="mono">v<sub>x</sub></span> и <span class="mono">v<sub>y</sub></span>, и каждая компонента живёт по тем же законам, что и на прямой. Это <strong>принцип суперпозиции</strong>: движения по осям независимы.
+                </p>
+                <p class="theory-card__p">
+                  Галилеево преобразование здесь работает точно так же, но эффекты нагляднее. Переключитесь в систему отсчёта одной из машин, и вторая начнёт описывать совсем другую траекторию, чем в лабораторной системе. Прямолинейное движение превращается в диагональное. Та же физика, но другой угол зрения, в буквальном смысле.
                 </p>
               </section>
 
               <section class="theory-card theory-card--accent">
-                <h4 class="theory-card__h">Лабораторный стенд в интерфейсе</h4>
-                <ul class="theory-list">
-                  <li><span class="theory-list__mark" aria-hidden="true"></span>Вид сверху: оси, машины, следы, опционально — редактирование траектории (луч / путь).</li>
-                  <li><span class="theory-list__mark" aria-hidden="true"></span>Ползунки и поля для <span class="mono">x<sub>0</sub>, y<sub>0</sub></span>, компонент скорости и ускорения или полярный ввод <span class="mono">|v|, θ</span>.</li>
-                  <li><span class="theory-list__mark" aria-hidden="true"></span>Графики <span class="mono">x(t), y(t), v(t)</span>, разность координат, блок метрик в выбранной СО.</li>
-                  <li><span class="theory-list__mark" aria-hidden="true"></span>Переключение дорога / СО <span class="mono">A</span> / <span class="mono">B</span> сразу пересчитывает «штрихованные» величины.</li>
-                </ul>
+                <h4 class="theory-card__h">Два режима движения</h4>
+                <p class="theory-card__p">
+                  Вид сверху на плоскость <span class="mono">xy</span>. Две машины, у каждой скорость (модуль и направление) и ускорение вдоль направления движения. Никакие силы на машины не действуют: модель описывает чистую кинематику. Машины едут туда и так, как вы задали.
+                </p>
+                <p class="theory-card__p">
+                  В <strong>лучевом режиме</strong> (по умолчанию) каждая машина движется прямолинейно: вы задаёте начальное положение, скорость <span class="mono">|v|</span> и угол <span class="mono">θ</span>, и машина едет вдоль этого луча. Если добавить ускорение, скорость вдоль луча меняется, но направление остаётся тем же.
+                </p>
+                <p class="theory-card__p">
+                  В <strong>режиме траектории</strong> (кнопка «Траектория» на панели инструментов) вы сами рисуете ломаную маршрутом из точек, и машина едет вдоль неё. Траекторию можно замкнуть, кликнув пером по машинке. Незамкнутую ломаную машина пройдёт до конца и продолжит движение прямо. Это позволяет создать практически любой маршрут и исследовать, как криволинейное движение выглядит из разных систем отсчёта. При этом никаких сил по-прежнему нет: машина просто следует по заданному пути с заданной скоростью.
+                </p>
               </section>
 
               <section class="theory-card">
-                <h4 class="theory-card__h">Ключевые формулы</h4>
+                <h4 class="theory-card__h">Формулы: лучевой режим</h4>
+                <p class="theory-card__p">
+                  В лучевом режиме положение описывается покомпонентно. Машина стартует из точки <span class="mono">(x<sub>0</sub>,&thinsp;y<sub>0</sub>)</span> и движется под углом <span class="mono">θ</span> с начальной скоростью <span class="mono">v<sub>0</sub></span> и ускорением <span class="mono">a</span> вдоль направления:
+                </p>
                 <div class="theory-formula-grid">
                   <div class="theory-eq theory-eq--wide" role="presentation">
-                    <span class="theory-eq__label">векторно (лабораторная СО)</span>
+                    <span class="theory-eq__label">положение (лабораторная СО)</span>
                     <p class="theory-eq__math mono">
                       <span class="theory-vec">r</span>(t) = <span class="theory-vec">r</span><sub>0</sub> + <span class="theory-vec">v</span><sub>0</sub> t +
-                      <span class="theory-frac"><span class="theory-frac__num"><span class="theory-vec">a</span> t<sup>2</sup></span><span class="theory-frac__den">2</span></span>, &nbsp;
-                      <span class="theory-vec">v</span>(t) = <span class="theory-vec">v</span><sub>0</sub> + <span class="theory-vec">a</span> t
+                      <span class="theory-frac"><span class="theory-frac__num"><span class="theory-vec">a</span> t<sup>2</sup></span><span class="theory-frac__den">2</span></span>
                     </p>
                   </div>
                   <div class="theory-eq theory-eq--wide" role="presentation">
-                    <span class="theory-eq__label">Галилей в плоскости</span>
-                    <p class="theory-eq__math mono"><span class="theory-vec">r</span>′ = <span class="theory-vec">r</span> − <span class="theory-vec">V</span> t, &nbsp; <span class="theory-vec">v</span>′ = <span class="theory-vec">v</span> − <span class="theory-vec">V</span>, &nbsp; t′ = t</p>
-                    <p class="theory-eq__note"><span class="theory-vec theory-vec--note">V</span> — поступательная скорость выбранной опорной системы (в модели — скорость центра выбранной машины в лабораторной СО).</p>
+                    <span class="theory-eq__label">декартовы компоненты</span>
+                    <p class="theory-eq__math mono theory-eq__math--nowrap">
+                      x(t) = x<sub>0</sub> + (v<sub>0</sub>t + <span class="theory-frac"><span class="theory-frac__num">at<sup>2</sup></span><span class="theory-frac__den">2</span></span>) cos θ, &nbsp;
+                      y(t) = y<sub>0</sub> + (v<sub>0</sub>t + <span class="theory-frac"><span class="theory-frac__num">at<sup>2</sup></span><span class="theory-frac__den">2</span></span>) sin θ
+                    </p>
                   </div>
                   <div class="theory-eq theory-eq--wide" role="presentation">
-                    <span class="theory-eq__label">декартовы компоненты</span>
-                    <p class="theory-eq__math mono theory-eq__math--nowrap">x′ = x − V<sub>x</sub> t, &nbsp; y′ = y − V<sub>y</sub> t</p>
+                    <span class="theory-eq__label">скорость</span>
+                    <p class="theory-eq__math mono">
+                      v<sub>x</sub>(t) = (v<sub>0</sub> + at) cos θ, &nbsp;
+                      v<sub>y</sub>(t) = (v<sub>0</sub> + at) sin θ, &nbsp;
+                      |<span class="theory-vec">v</span>| = v<sub>0</sub> + at
+                    </p>
                   </div>
                 </div>
               </section>
 
               <section class="theory-card">
-                <h4 class="theory-card__h">Что можно исследовать</h4>
-                <div class="theory-chips">
-                  <span class="theory-chip">Повернуть векторы начальных скоростей и сравнить форму траектории на сцене и на графиках</span>
-                  <span class="theory-chip">Включить режим пути, нарисовать ломаную и проследить, как меняется <span class="mono">s(t)</span> вдоль кривой</span>
-                  <span class="theory-chip">Перейти в СО одной из машин и «поймать» момент, когда вторая описывается простейшими закономерностями</span>
-                  <span class="theory-chip">Сопоставить относительную скорость в проекциях с тем, что вы видите на плоскости</span>
+                <h4 class="theory-card__h">Формулы: режим траектории</h4>
+                <p class="theory-card__p">
+                  В режиме траектории машина движется вдоль нарисованной ломаной. Кинематика та же самая, только вместо декартовых координат естественным параметром становится <strong>длина дуги</strong> <span class="mono">s</span>, пройденная вдоль кривой:
+                </p>
+                <div class="theory-formula-grid">
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">длина дуги</span>
+                    <p class="theory-eq__math mono">
+                      s(t) = v<sub>0</sub> t +
+                      <span class="theory-frac"><span class="theory-frac__num">a t<sup>2</sup></span><span class="theory-frac__den">2</span></span>
+                    </p>
+                  </div>
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">скорость вдоль пути</span>
+                    <p class="theory-eq__math mono">v(t) = v<sub>0</sub> + a t</p>
+                  </div>
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">положение на плоскости</span>
+                    <p class="theory-eq__math mono">
+                      <span class="theory-vec">r</span>(t) = <span class="theory-vec">P</span>(s(t))
+                    </p>
+                    <p class="theory-eq__note"><span class="theory-vec theory-vec--note">P</span>(s) — точка на ломаной на расстоянии <span class="mono">s</span> от начала. Направление скорости задаётся касательной к пути: <span class="mono"><span class="theory-vec">v</span> = v(t) · <span class="theory-vec">τ̂</span>(s)</span>.</p>
+                  </div>
                 </div>
+                <p class="theory-card__p">
+                  Для замкнутой траектории <span class="mono">s</span> берётся по модулю полной длины маршрута, и машина ездит по кругу. Для незамкнутой <span class="mono">s</span> ограничивается длиной ломаной: когда маршрут заканчивается, машина продолжает прямо по последнему отрезку.
+                </p>
+              </section>
+
+              <section class="theory-card">
+                <h4 class="theory-card__h">Преобразование Галилея на плоскости</h4>
+                <div class="theory-formula-grid">
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">векторная форма</span>
+                    <p class="theory-eq__math mono"><span class="theory-vec">r</span>′ = <span class="theory-vec">r</span> − <span class="theory-vec">V</span> t, &nbsp; <span class="theory-vec">v</span>′ = <span class="theory-vec">v</span> − <span class="theory-vec">V</span>, &nbsp; t′ = t</p>
+                  </div>
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">покомпонентно</span>
+                    <p class="theory-eq__math mono theory-eq__math--nowrap">x′ = x − V<sub>x</sub> t, &nbsp; y′ = y − V<sub>y</sub> t</p>
+                  </div>
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">относительное расстояние</span>
+                    <p class="theory-eq__math mono">
+                      |Δ<span class="theory-vec">r</span>| = √(Δx² + Δy²), &nbsp;
+                      Δx = x<sub>B</sub> − x<sub>A</sub>, &nbsp;
+                      Δy = y<sub>B</sub> − y<sub>A</sub>
+                    </p>
+                  </div>
+                </div>
+                <p class="theory-card__p">
+                  Всё то же правило: вычитаем скорость наблюдателя из всех остальных. Только теперь <span class="theory-vec">V</span> — это вектор, а не число. Время по-прежнему общее. Это работает одинаково и в лучевом режиме, и в режиме траектории: преобразование Галилея не зависит от формы пути.
+                </p>
+              </section>
+
+              <section class="theory-card">
+                <h4 class="theory-card__h">Попробуйте сами</h4>
+                <p class="theory-card__p">
+                  Загрузите сценарий «Перекрёсток»: одна машина едет по горизонтали, другая по вертикали. Включите следы траекторий и переключите систему отсчёта на одну из машин. Вы увидите, как прямолинейное движение второй превращается в диагональное, хотя на дороге ничего не изменилось.
+                </p>
+                <p class="theory-card__p">
+                  Потом нажмите кнопку «Траектория» и нарисуйте ломаную. Запустите время, машина поедет по вашему маршруту. Переключите систему отсчёта, и ваша ломаная деформируется: то, что из лаборатории выглядело как аккуратный зигзаг, из другой машины окажется чем-то совсем иным. Это та же физика, что и на прямой, просто здесь она раскрывается полнее.
+                </p>
               </section>
 
               <aside class="theory-callout theory-callout--violet">
-                <strong class="theory-callout__title">Инструкция наблюдателю</strong>
-                <ol class="theory-steps">
-                  <li>Выберите модель «на плоскости» и задайте начальные скорости; запустите время.</li>
-                  <li>Переключайте систему отсчёта и одновременно смотрите сцену, метрики и графики <span class="mono">x′, y′</span>.</li>
-                  <li>По желанию откройте редактирование траектории: смена режима луч / путь меняет класс задачи — сравните с теорией прямолинейного и криволинейного движения с тем же галилеевым ядром.</li>
-                </ol>
+                <strong class="theory-callout__title">Совет</strong>
+                <p class="theory-callout__p">
+                  Включите отображение катетов <span class="mono">Δx′</span> и <span class="mono">Δy′</span>: они покажут, как расстояние между машинами раскладывается по осям в текущей системе отсчёта. Помогает связать картинку на сцене с числами в метриках. Сценарий «Торможение и разгон» хорошо показывает, как в чужой системе отсчёта прямолинейное движение выглядит криволинейным.
+                </p>
               </aside>
             </div>
           </article>
         </div>
+
+        <!-- Standalone guide blocks — one per model, shown/hidden via CSS -->
+        <details class="model-guide model-guide--line" id="guide-line">
+          <summary class="model-guide__toggle">Как пользоваться этой моделью</summary>
+          <div class="model-guide__body-wrap">
+          <div class="model-guide__body">
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Окно симуляции</h4>
+              <p>Перед вами горизонтальная дорога с двумя машинами — <strong>A</strong> (синяя) и <strong>B</strong> (оранжевая). Они движутся по одной оси <span class="mono">x</span>. Над окном видны текущее время и масштаб воспроизведения, а также система отсчёта, в которой вы сейчас наблюдаете.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Запуск и управление временем</h4>
+              <p>Нажмите <strong>▶</strong> — симуляция пойдёт. Повторное нажатие ставит на паузу. Кнопка <strong>↺</strong> сбрасывает время на ноль. Ниже есть перемотка: можно прыгнуть к началу, к концу или сдвинуть время на ±1 и ±5 секунд. Ползунок времени позволяет вручную протягивать запись туда-сюда, как в видеоплеере.</p>
+              <p>Переключатели <strong>×0.5, ×1, ×2, ×4</strong> ускоряют или замедляют ход времени — удобно, если хочется рассмотреть быстрый процесс в деталях или, наоборот, ускорить медленный.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Начальные условия</h4>
+              <p>Шесть ползунков задают стартовые параметры каждой машины:</p>
+              <ul class="model-guide__list">
+                <li><strong>x₀</strong> — начальное положение на дороге (в метрах). Сдвиньте ползунок влево — машина стартует левее, вправо — правее.</li>
+                <li><strong>v</strong> — начальная скорость (м/с). Положительная — вправо, отрицательная — влево.</li>
+                <li><strong>a</strong> — ускорение (м/с²). Если задать ненулевое значение, машина будет разгоняться или тормозить.</li>
+              </ul>
+              <p>Числовые поля рядом с ползунками позволяют вбить точное значение с клавиатуры.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Система отсчёта</h4>
+              <p>Три кнопки — <strong>Дорога</strong>, <strong>Машина A</strong>, <strong>Машина B</strong> — переключают систему отсчёта. В системе дороги вы видите «обычную» картину: обе машины едут по неподвижной дороге. В системе машины A дорога и машина B начинают двигаться так, будто A стоит на месте. Это и есть галилеево преобразование: физика не меняется, меняется только точка зрения.</p>
+              <p>Обратите внимание, как при переключении синхронно обновляются координаты в метриках, линии на графиках и положение объектов на сцене.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Сценарии</h4>
+              <p>Готовые наборы начальных условий: «Обе стоят», «Одна догоняет другую», «Навстречу друг другу» и т.д. Нажимаете кнопку — ползунки выставляются автоматически. Это удобная отправная точка: выберите сценарий, запустите, посмотрите, что происходит, а затем подкрутите параметры вручную.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Метрики и графики</h4>
+              <p>Под симуляцией — три карточки с числами. Первая показывает координаты и скорости в лабораторной системе (дорога). Вторая — в выбранной системе отсчёта, со штрихами <span class="mono">x′, v′</span>. Третья — сводка: относительная скорость и расстояние между машинами.</p>
+              <p>Графики строятся в реальном времени по мере хода симуляции: положение <span class="mono">x(t)</span>, скорость <span class="mono">v(t)</span>, разность координат <span class="mono">Δx(t)</span>. Если задать ускорение — на графике положения появится парабола.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Инструменты наблюдения</h4>
+              <ul class="model-guide__list">
+                <li><strong>Следы траекторий</strong> — цветные полоски позади машин, наглядно показывают пройденный путь.</li>
+                <li><strong>Относительное расстояние</strong> — подсвечивает отрезок между машинами прямо на сцене.</li>
+                <li><strong>Всплывающие подсказки</strong> — числовые значения координат и скоростей появляются рядом с объектами на сцене.</li>
+              </ul>
+            </section>
+          </div>
+          </div>
+        </details>
+
+        <details class="model-guide model-guide--lab" id="guide-lab">
+          <summary class="model-guide__toggle">Как пользоваться этой моделью</summary>
+          <div class="model-guide__body-wrap">
+          <div class="model-guide__body">
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Окно симуляции</h4>
+              <p>Здесь вы смотрите на плоскость сверху — как на стол, по которому ездят две машины. Оси <span class="mono">x</span> и <span class="mono">y</span> размечены на поле, а сами машины оставляют за собой цветные следы, по которым видна траектория.</p>
+              <p>Слева и снизу от окна симуляции расположены ползунки <strong>x₀</strong> и <strong>y₀</strong>. Они появляются, когда вы выбираете машину кликом на ней (в СО «дорога»). Перетаскивая эти ползунки, вы задаёте начальное положение выбранной машины на плоскости.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Выбор машины и направление скорости</h4>
+              <p>Кликните по одной из машин на поле — вокруг неё появится тонкая окружность с лучом, показывающим направление начальной скорости. Перетащите точку на дуге — угол <span class="mono">θ</span> изменится, и машина поедет в другую сторону. Точное значение угла можно вписать в поле <strong>θ (°)</strong>, которое появляется рядом с окном симуляции.</p>
+              <p>Под полем угла есть индикатор, показывающий текущее выбранную машину.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Скорость и ускорение</h4>
+              <p>На панели управления справа — четыре ползунка:</p>
+              <ul class="model-guide__list">
+                <li><strong>v₀ (A)</strong> и <strong>v₀ (B)</strong> — модуль начальной скорости для каждой машины. Направление задаётся углом на сцене, а здесь вы регулируете «силу» этой скорости.</li>
+                <li><strong>a (A)</strong> и <strong>a (B)</strong> — ускорение вдоль направления скорости. Положительное — машина разгоняется вдоль своего вектора, отрицательное — тормозит.</li>
+              </ul>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Навигация по сцене</h4>
+              <p>Поле симуляции можно масштабировать и двигать — это особенно полезно, когда машины разъезжаются далеко или когда нужно рассмотреть участок траектории поближе.</p>
+              <ul class="model-guide__list">
+                <li><strong>Колесо мыши</strong> — приближает и отдаляет сцену. Диапазон масштаба от ×0.6 до ×2.6.</li>
+                <li><strong>Shift + перетаскивание</strong> — перемещает видимую область сцены в любую сторону. Зажмите Shift, кликните на поле и тяните.</li>
+                <li><strong>Средняя кнопка мыши</strong> или <strong>Alt + перетаскивание</strong> — тоже перемещает сцену (альтернатива Shift).</li>
+              </ul>
+              <p>В режиме траектории на панели инструментов также появляется ползунок масштаба с кнопками «−» и «+» и числовым полем — можно задать масштаб точно.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Режим траектории</h4>
+              <p>Кнопка <strong>«Траектория»</strong> с иконкой ломаной линии включает режим траектории. Пока она не нажата, панель инструментов неактивна. После нажатия машина переключается с прямолинейного луча на ломаную, которую вы рисуете сами, и на панели становятся доступны четыре инструмента:</p>
+              <ul class="model-guide__list">
+                <li><strong>Перо</strong> — кликайте на поле, чтобы ставить точки. Машина будет ехать по получившейся ломаной от точки к точке.</li>
+                <li><strong>Рука</strong> — выбирайте машину кликом или кликните в пустое место, чтобы скрыть разметку.</li>
+                <li><strong>Перемещение</strong> — перетаскивайте уже поставленные точки на новое место. Зажав Shift, можно панорамировать всю сцену.</li>
+                <li><strong>Ластик</strong> — кликните по точке, чтобы удалить её из ломаной.</li>
+              </ul>
+              <p>Кнопки отмены и повтора позволяют откатить последние действия. Ползунок масштаба увеличивает или уменьшает поле, чтобы было удобнее работать с длинными маршрутами.</p>
+              <p>Чтобы зациклить маршрут, при рисовании пером кликните прямо по машинке — траектория замкнётся, и машина будет ездить по кругу. Если этого не сделать и оставить траекторию незамкнутой, машина доедет до последней точки и продолжит движение прямо.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Система отсчёта</h4>
+              <p>Как и в модели по прямой, переключатель <strong>Дорога / Машина A / Машина B</strong> меняет систему отсчёта. На плоскости эффект нагляднее: при переходе в СО одной из машин вся сцена начинает «ехать» так, будто выбранная машина неподвижна. Координаты, скорости, траектории на графиках — всё пересчитывается по галилеевому преобразованию, но уже для двух осей одновременно.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Графики и метрики</h4>
+              <p>В плоскостном режиме добавляются графики <span class="mono">y(t)</span> и <span class="mono">y′(t)</span> — координата по второй оси. Метрики расширяются: появляются <span class="mono">y</span>-координаты, компоненты скорости <span class="mono">v<sub>y</sub></span>, модуль скорости <span class="mono">|v|</span>, расстояние между машинами <span class="mono">|Δr|</span> и его проекции <span class="mono">Δx, Δy</span>.</p>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Сценарии для плоскости</h4>
+              <p>Помимо стандартных сценариев (они работают и здесь), доступны три дополнительных:</p>
+              <ul class="model-guide__list">
+                <li><strong>Перекрёсток</strong> — классическая задача: одна машина едет по горизонтали, другая — по вертикали. Включите следы траекторий и переключите систему отсчёта, чтобы увидеть, как прямолинейное движение одной машины выглядит из другой.</li>
+                <li><strong>Параллельные курсы</strong> — обе машины едут примерно в одном направлении, но под немного разными углами и с разными скоростями. Со временем расстояние между ними растёт — наглядная демонстрация того, как даже небольшая разница в направлении приводит к расхождению.</li>
+                <li><strong>Торможение и разгон</strong> — одна машина тормозит, другая разгоняется. В системе отсчёта любой из них траектория второй становится криволинейной, хотя обе движутся по прямой.</li>
+              </ul>
+            </section>
+            <section class="model-guide__section">
+              <h4 class="model-guide__h">Инструменты наблюдения</h4>
+              <ul class="model-guide__list">
+                <li><strong>Следы траекторий</strong> — цветные линии за машинами показывают, по какой кривой они ехали.</li>
+                <li><strong>Относительное расстояние</strong> — отрезок между машинами с числовым значением.</li>
+                <li><strong>Катеты Δx′ и Δy′</strong> — визуализация проекций расстояния между машинами на оси (доступна только в плоскостном режиме).</li>
+                <li><strong>Всплывающие подсказки</strong> — координаты и скорости прямо на объектах сцены.</li>
+              </ul>
+            </section>
+          </div>
+          </div>
+        </details>
 
         <div class="sim-column">
           <div class="sim-stage">
@@ -665,9 +854,9 @@
               <button type="button" class="preset-btn" data-preset="headon">Навстречу друг другу</button>
               <button type="button" class="preset-btn" data-preset="faster">Одна быстрее</button>
               <button type="button" class="preset-btn" data-preset="negative">Обратное направление</button>
-              <button type="button" class="preset-btn plane-only" data-preset="plane-cross">Плоскость · перекрёст</button>
-              <button type="button" class="preset-btn plane-only" data-preset="plane-overtake">Плоскость · обгон по дуге</button>
-              <button type="button" class="preset-btn plane-only" data-preset="plane-drift">Плоскость · занос с ускорением</button>
+              <button type="button" class="preset-btn plane-only" data-preset="plane-cross">Плоскость · перекрёсток</button>
+              <button type="button" class="preset-btn plane-only" data-preset="plane-parallel">Плоскость · параллельные курсы</button>
+              <button type="button" class="preset-btn plane-only" data-preset="plane-accel">Плоскость · торможение и разгон</button>
             </div>
           </div>
 
@@ -1049,6 +1238,6 @@
 
   <div class="toast" id="toast-hint" role="status" aria-live="polite" hidden></div>
 
-  <script src="script.js?v=28"></script>
+  <script src="script.js?v=30"></script>
 </body>
 </html>
