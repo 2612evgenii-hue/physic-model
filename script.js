@@ -3023,13 +3023,24 @@
     if (model !== "lab" && model !== "line" && model !== "lightspeed") return;
     if ((state.siteModel || "line") === model) return;
     state.siteModel = model;
+    state.t = 0;
+    state.tRecorded = 0;
+    setPlaying(false);
+
+    // Preserve scroll position
+    var savedScroll = window.scrollY;
+
+    // Instant: pill slider + body classes
     document.body.classList.toggle("sim-site-line", model === "line");
     document.body.classList.toggle("is-lightspeed", model === "lightspeed");
-    const longreadRoot = document.getElementById("longread-c-root");
+    syncSiteModelUi();
+
+    var longreadRoot = document.getElementById("longread-c-root");
     if (longreadRoot) {
       if (model === "lightspeed") longreadRoot.removeAttribute("hidden");
       else longreadRoot.setAttribute("hidden", "");
     }
+
     if (model === "line") {
       if (state.dimensionMode === "plane") setDimensionMode("line");
       state.planeMotionMode = "ray";
@@ -3039,20 +3050,21 @@
       state.planeView = { mode: "auto", cx: 0, cy: 0, zoom: 1 };
     } else if (model === "lab") {
       if (state.dimensionMode !== "plane") setDimensionMode("plane");
-    } else if (model === "lightspeed") {
-      // Лонгрид существует независимо от обычной симуляции; останавливаем основной стенд.
     }
-    state.t = 0;
-    state.tRecorded = 0;
-    setPlaying(false);
-    syncSiteModelUi();
-    syncPlaneMotionModeUI();
-    syncRailsFromState();
-    updatePlanePanelUI();
-    resizeCanvases();
-    updateMetrics();
-    // Уведомляем модуль лонгрида о смене режима, чтобы запустить/остановить анимации
-    document.dispatchEvent(new CustomEvent("ls:siteModelChange", { detail: { model } }));
+
+    // Restore scroll — layout changes may have shifted it
+    window.scrollTo(0, savedScroll);
+
+    // Defer heavy work to next frame
+    requestAnimationFrame(function() {
+      syncPlaneMotionModeUI();
+      syncRailsFromState();
+      updatePlanePanelUI();
+      resizeCanvases();
+      updateMetrics();
+      window.scrollTo(0, savedScroll);
+      document.dispatchEvent(new CustomEvent("ls:siteModelChange", { detail: { model: model } }));
+    });
   }
 
   function syncSiteModelUi() {

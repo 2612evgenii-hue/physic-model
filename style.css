@@ -2487,7 +2487,7 @@ body.is-lightspeed #longread-c-root {
   gap: clamp(1.8rem, 4vw, 2.8rem);
   width: 100%;
   min-width: 0;
-  padding-top: clamp(0.5rem, 2vw, 1.25rem);
+  margin-top: 0.85rem;
 }
 
 .model-picker__pill--lightspeed {
@@ -2501,7 +2501,7 @@ body.is-lightspeed #longread-c-root {
 /* --- Hero --- */
 .ls-hero {
   position: relative;
-  padding: clamp(1.5rem, 3.6vw, 2.4rem) clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1.35rem, 3.2vw, 2rem) clamp(1.25rem, 3vw, 2rem);
   border-radius: var(--radius-lg);
   background: var(--bg-panel);
   border: 1px solid var(--stroke);
