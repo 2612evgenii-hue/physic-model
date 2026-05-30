@@ -33,6 +33,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -562,6 +563,7 @@ body {
   grid-template-columns: 1fr min(380px, 34%);
   gap: 1.5rem;
   align-items: start;
+  overflow-x: hidden;
 }
 
 .sim-column {
@@ -690,8 +692,17 @@ body {
 
 @media (max-width: 640px) {
   .model-picker__pill {
-    font-size: 0.74rem;
-    padding: 0.42rem 0.78rem;
+    font-size: 0.68rem;
+    padding: 0.38rem 0.55rem;
+  }
+
+  .model-picker--layout-top .model-picker__shell {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .model-picker--layout-top .model-picker__shell::-webkit-scrollbar {
+    display: none;
   }
 
   /* В верхнем переключателе — одна линия + скролл при нехватке места */
@@ -2488,6 +2499,7 @@ body.is-lightspeed #longread-c-root {
   width: 100%;
   min-width: 0;
   margin-top: 0.85rem;
+  overflow-x: hidden;
 }
 
 .model-picker__pill--lightspeed {
@@ -2576,6 +2588,8 @@ body.is-lightspeed #longread-c-root {
   flex-direction: column;
   gap: 0;
   scroll-margin-top: 2rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 /* Элементы внутри главы, кроме head+text (которые слиты), получают отступ */
@@ -2591,6 +2605,8 @@ body.is-lightspeed #longread-c-root {
   gap: 0.4rem;
   padding: 1.1rem 1.25rem 0.6rem;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  min-width: 0;
+  box-sizing: border-box;
   background:
     radial-gradient(120% 100% at 0% 0%, rgba(125, 196, 168, 0.06), transparent 60%),
     var(--bg-panel);
@@ -2636,12 +2652,14 @@ body.is-lightspeed #longread-c-root {
   gap: 0.85rem;
   max-width: min(56rem, 100%);
   width: 100%;
+  min-width: 0;
   align-self: center;
   padding: 0.4rem 1.25rem 1.1rem;
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   background: var(--bg-panel);
   border: 1px solid var(--stroke);
   border-top: none;
+  box-sizing: border-box;
 }
 
 .ls-text p {
@@ -3034,6 +3052,9 @@ body.is-lightspeed #longread-c-root {
   .ls-twin-grid {
     grid-template-columns: 1fr;
   }
+  .ls-stage {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* --- Scene-specific: gamma plot table --- */
@@ -3254,10 +3275,17 @@ body.is-lightspeed #longread-c-root {
 
 /* ── Hero mobile adjustments ── */
 @media (max-width: 640px) {
+  .hero {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
   .hero__center {
-    padding-top: calc(6rem + 4vh);
+    padding-top: 3.5rem;
+    padding-bottom: 0;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
+    justify-content: center;
+    flex: 1;
   }
   .hero__title {
     font-size: clamp(1.55rem, 7vw, 2.2rem);
@@ -3279,8 +3307,10 @@ body.is-lightspeed #longread-c-root {
     display: none;
   }
   .hero__footer {
+    flex-shrink: 0;
     font-size: 0.65rem;
     padding: 0.7rem 1.25rem;
+    margin-top: auto;
   }
 }
 

@@ -3062,6 +3062,7 @@
       updatePlanePanelUI();
       resizeCanvases();
       updateMetrics();
+      syncSiteModelUi(); // recalc slider after layout settles
       window.scrollTo(0, savedScroll);
       document.dispatchEvent(new CustomEvent("ls:siteModelChange", { detail: { model: model } }));
     });
