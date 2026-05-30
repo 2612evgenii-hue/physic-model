@@ -3,13 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Относительность движения, интерактивная модель</title>
+  <title>Физический стенд — модели для изучения фундаментальной физики</title>
+  <meta name="description" content="Интерактивные демонстрации по физике: кинематика, преобразования Галилея, специальная теория относительности. Визуализации с формулами и численным экспериментом." />
+  <meta name="author" content="Евгений Гончаров, Университет ИТМО" />
+  <meta name="theme-color" content="#05060a" />
+  <meta property="og:title" content="Физический стенд — интерактивные модели" />
+  <meta property="og:description" content="Интерактивные демонстрации по кинематике, преобразованиям Галилея и специальной теории относительности." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚛️</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=28" />
 </head>
-<body>
+<body class="sim-site-line">
   <div class="ambient" aria-hidden="true">
     <div class="ambient__glow ambient__glow--1"></div>
     <div class="ambient__glow ambient__glow--2"></div>
@@ -18,82 +26,266 @@
     <div class="ambient__axes" aria-hidden="true"></div>
   </div>
 
+  <!-- Cinematic intro overlay -->
+  <div class="intro-overlay" id="intro-overlay" aria-hidden="true">
+    <canvas id="intro-canvas"></canvas>
+  </div>
+  <div class="intro-flash" id="intro-flash"></div>
+
   <header class="hero">
-    <div class="hero__formulas" aria-hidden="true">
-      <span class="hero__formula hero__formula--a">x = x₀ + vt</span>
-      <span class="hero__formula hero__formula--b">x′ = x − x<sub>опор</sub></span>
-      <span class="hero__formula hero__formula--c">x′<sub>B</sub> = x<sub>B</sub> − x<sub>A</sub></span>
-      <span class="hero__formula hero__formula--d">x′<sub>A</sub> = x<sub>A</sub> − x<sub>B</sub></span>
-      <span class="hero__formula hero__formula--e">v′ = v − v<sub>0</sub></span>
-      <span class="hero__formula hero__formula--f">v<sub>отн</sub> = v<sub>A</sub> − v<sub>B</sub></span>
-      <span class="hero__formula hero__formula--g">Δx = x<sub>B</sub> − x<sub>A</sub></span>
-      <span class="hero__formula hero__formula--h">v′<sub>B</sub> = v<sub>B</sub> − v<sub>A</sub></span>
-      <span class="hero__formula hero__formula--i">в СО машины v′ = 0</span>
-      <span class="hero__formula hero__formula--j">t′ = t</span>
-      <span class="hero__formula hero__formula--k">равномерное движение, a = 0</span>
-      <span class="hero__formula hero__formula--l">x(t) = x₀ + vt</span>
+    <!-- Neural-net sphere — full-page background -->
+    <div class="hero__bg" aria-hidden="true">
+      <canvas id="hero-orbit-canvas"></canvas>
+      <div class="hero__bg-fade-top"></div>
+      <div class="hero__bg-fade-bottom"></div>
     </div>
-    <div class="hero__content">
-      <p class="hero__eyebrow">Физика · классическая механика</p>
+
+    <!-- Centered content — strict, minimal -->
+    <div class="hero__center">
+      <div class="hero__badge mono">
+        <span class="hero__badge-icon" aria-hidden="true">◆</span>
+        Демонстрационный стенд · фундаментальная физика
+      </div>
+
       <h1 class="hero__title">
-        <span class="hero__title-line">Относительность</span>
-        <span class="hero__title-line hero__title-line--accent">движения на прямой</span>
+        Интерактивные модели<br>для изучения физики
       </h1>
+
       <p class="hero__lead">
-        Интерактивная модель показывает, как меняется описание движения двух автомобилей в разных системах отсчёта. Меняя скорости и точку отсчёта, дорогу или один из автомобилей, можно увидеть, что движение остаётся тем же, а координаты и относительные скорости зависят от выбора наблюдателя.
+        Визуализации по кинематике, преобразованиям Галилея и специальной теории относительности. С формулами, графиками и численным экспериментом.
       </p>
+
       <div class="hero__actions">
-        <button type="button" class="btn btn--primary" id="btn-scroll-sim">К симуляции</button>
+        <button type="button" class="btn btn--primary" id="btn-scroll-sim">
+          К симуляции
+          <span class="btn__arrow" aria-hidden="true">→</span>
+        </button>
       </div>
     </div>
-    <div class="hero__visual">
-      <div class="hero__stage" aria-hidden="true">
-        <div class="hero__stage-sky"></div>
-        <div class="hero__stage-parallax">
-          <div class="hero__stripes hero__stripes--slow"></div>
-          <div class="hero__stripes hero__stripes--fast"></div>
-        </div>
-        <div class="hero__stage-road"></div>
-        <div class="hero__stage-axis">
-          <span class="hero__tick" style="left: 12%">−20</span>
-          <span class="hero__tick" style="left: 50%">0</span>
-          <span class="hero__tick" style="left: 88%">+20</span>
-        </div>
-        <div class="hero__car-wrap hero__car-wrap--b">
-          <div class="hero__car-body hero__car-body--b"></div>
-          <span class="hero__car-tag">B</span>
-        </div>
-        <div class="hero__car-wrap hero__car-wrap--a">
-          <div class="hero__car-body hero__car-body--a"></div>
-          <span class="hero__car-tag">A</span>
-        </div>
+
+    <!-- Capabilities band -->
+    <div class="hero__caps">
+      <div class="hero__cap">
+        <span class="hero__cap-num mono">01</span>
+        <strong class="hero__cap-title">Кинематика</strong>
+        <p class="hero__cap-desc">Движение по прямой и на плоскости, системы отсчёта, преобразования Галилея</p>
       </div>
-      <aside class="hero__credit" aria-label="Автор проекта">
-        <div class="hero__credit-glow" aria-hidden="true"></div>
-        <p class="hero__credit-kicker">Автор и разработчик</p>
-        <p class="hero__credit-name">Гончаров Евгений</p>
-        <p class="hero__credit-handle mono" lang="en">2612evgenii@gmail.com</p>
-        <div class="hero__credit-meta">
-          <p class="hero__credit-line">
-            <span class="hero__credit-icon" aria-hidden="true">◇</span>
-            Университет ИТМО
-          </p>
-          <p class="hero__credit-line hero__credit-line--faculty">
-            Факультет безопасности информационных технологий
-            <abbr class="hero__credit-abbr" title="Факультет безопасности информационных технологий">ФБИТ</abbr>
-          </p>
-        </div>
-      </aside>
+      <div class="hero__cap">
+        <span class="hero__cap-num mono">02</span>
+        <strong class="hero__cap-title">Теория относительности</strong>
+        <p class="hero__cap-desc">Фотонные часы, замедление времени, фактор Лоренца, мионы</p>
+      </div>
+      <div class="hero__cap">
+        <span class="hero__cap-num mono">03</span>
+        <strong class="hero__cap-title">Визуализации</strong>
+        <p class="hero__cap-desc">Интерактивные графики, анимации процессов, численный подбор параметров</p>
+      </div>
     </div>
+
+    <!-- Footer line -->
+    <footer class="hero__footer">
+      <span>Гончаров Евгений · Университет ИТМО · ФБИТ</span>
+      <span class="mono">2612evgenii@gmail.com</span>
+    </footer>
   </header>
 
   <main class="main">
     <section class="section section--sim" id="sim-section">
-      <div class="section__header">
-        <h2 class="section__title">Модель</h2>
+      <div class="section__header section__header--models">
+        <h2 class="section__title section__title--models">Доступные модели</h2>
       </div>
 
       <div class="layout-sim">
+        <div class="model-picker-wrap">
+          <nav class="model-picker model-picker--layout-top" aria-label="Выбор демонстрации">
+            <div class="model-picker__shell">
+              <div class="model-picker__pills" role="group">
+                <span class="model-picker__slider" aria-hidden="true"></span>
+                <button
+                  type="button"
+                  class="model-picker__pill is-active"
+                  id="btn-site-model-line"
+                  data-site-model="line"
+                  aria-pressed="true"
+                  title="Движение вдоль одной оси дороги, те же законы Галилея в выбранной СО"
+                >
+                  Движение по прямой
+                </button>
+                <button
+                  type="button"
+                  class="model-picker__pill"
+                  id="btn-site-model-lab"
+                  data-site-model="lab"
+                  aria-pressed="false"
+                  title="Плоскость xy, траектория, расширенные графики и метрики"
+                >
+                  Движение на плоскости
+                </button>
+                <button
+                  type="button"
+                  class="model-picker__pill model-picker__pill--lightspeed"
+                  id="btn-site-model-lightspeed"
+                  data-site-model="lightspeed"
+                  aria-pressed="false"
+                  title="Лонгрид по специальной теории относительности с серией интерактивных моделей"
+                >
+                  Скорость света
+                </button>
+              </div>
+            </div>
+          </nav>
+        </div>
+
+        <div class="model-theory-wrap" id="model-theory-region">
+          <article class="model-theory model-theory--line" aria-labelledby="theory-line-title" aria-hidden="false">
+            <header class="model-theory__head">
+              <p class="model-theory__kicker">Модель 1 · одна ось</p>
+              <h3 class="model-theory__title" id="theory-line-title">Движение по прямой</h3>
+              <p class="model-theory__lead">
+                Наглядный «коридорный» стенд: две машины на одной дороге, три системы отсчёта и те же галилеевы правила, что и в полной лаборатории — только без плоскости
+                <span class="mono">xy</span>. Идеально, чтобы сначала освоить язык координат, скоростей и переходов между СО.
+              </p>
+            </header>
+
+            <div class="model-theory__body">
+              <section class="theory-card">
+                <h4 class="theory-card__h">О чём эта тема</h4>
+                <p class="theory-card__p">
+                  Классическая <strong>кинематика на прямой</strong>: положение и скорость меняются во времени по заданным начальным условиям; при ненулевом ускорении — равномерно ускоренное движение. Второй слой —
+                  <strong>принцип относительности Галилея</strong>: законы в инерциальных системах одинаковы, а координаты и скорости в разных СО связены простым сдвигом на скорость опорной точки.
+                </p>
+              </section>
+
+              <section class="theory-card theory-card--accent">
+                <h4 class="theory-card__h">Лабораторный стенд в интерфейсе</h4>
+                <ul class="theory-list">
+                  <li><span class="theory-list__mark" aria-hidden="true"></span>Дорога как ось <span class="mono">x</span>, две машины <span class="mono">A</span> и <span class="mono">B</span>.</li>
+                  <li><span class="theory-list__mark" aria-hidden="true"></span>Три инерциальные СО: <strong>дорога</strong>, связанная с <strong>A</strong> и с <strong>B</strong>.</li>
+                  <li><span class="theory-list__mark" aria-hidden="true"></span>Ползунки начальных координат, скоростей и ускорений; запись времени и графики <span class="mono">x(t)</span>, <span class="mono">v(t)</span>.</li>
+                  <li><span class="theory-list__mark" aria-hidden="true"></span>Мини-сцена и подписи показывают, как выбранная СО «перекраивает» числа, не ломая физику.</li>
+                </ul>
+              </section>
+
+              <section class="theory-card">
+                <h4 class="theory-card__h">Ключевые формулы</h4>
+                <div class="theory-formula-grid">
+                  <div class="theory-eq" role="presentation">
+                    <span class="theory-eq__label">положение</span>
+                    <p class="theory-eq__math mono">
+                      x(t) = x<sub>0</sub> + v<sub>0</sub>t +
+                      <span class="theory-frac"><span class="theory-frac__num">a t<sup>2</sup></span><span class="theory-frac__den">2</span></span>
+                    </p>
+                  </div>
+                  <div class="theory-eq" role="presentation">
+                    <span class="theory-eq__label">скорость</span>
+                    <p class="theory-eq__math mono">v(t) = v<sub>0</sub> + a t</p>
+                  </div>
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">преобразование Галилея</span>
+                    <p class="theory-eq__math mono">x′ = x − V t, &nbsp; v′ = v − V, &nbsp; t′ = t</p>
+                    <p class="theory-eq__note">здесь <span class="mono">V</span> — скорость выбранной опорной системы относительно дороги (для СО машины <span class="mono">A</span> или <span class="mono">B</span> подставляется её скорость).</p>
+                  </div>
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">относительная скорость и разность координат</span>
+                    <p class="theory-eq__math mono">v<sub>отн</sub> = v<sub>A</sub> − v<sub>B</sub>, &nbsp; Δx = x<sub>B</sub> − x<sub>A</sub></p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="theory-card">
+                <h4 class="theory-card__h">Что можно исследовать</h4>
+                <div class="theory-chips">
+                  <span class="theory-chip">Перейти в СО машины и убедиться: в «своей» системе её <span class="mono">v′ = 0</span></span>
+                  <span class="theory-chip">Сравнить обгон и встречу при разных <span class="mono">v<sub>A</sub></span>, <span class="mono">v<sub>B</sub></span></span>
+                  <span class="theory-chip">Включить ускорения <span class="mono">a</span> и проследить параболу на <span class="mono">x(t)</span></span>
+                  <span class="theory-chip">Понаблюдать, как меняются подписи и графики при смене СО — без смены реального движения по дороге</span>
+                </div>
+              </section>
+
+              <aside class="theory-callout">
+                <strong class="theory-callout__title">Как читать интерфейс</strong>
+                <p class="theory-callout__p">
+                  Запустите воспроизведение, покрутите время скрабом и переключайте вкладки систем отсчёта: обратите внимание на согласованность «живой» сцены, чисел в метриках и графиков — это и есть проверка
+                  галилеевой картины на одной оси.
+                </p>
+              </aside>
+            </div>
+          </article>
+
+          <article class="model-theory model-theory--lab" aria-labelledby="theory-lab-title" aria-hidden="true">
+            <header class="model-theory__head">
+              <p class="model-theory__kicker">Модель 2 · плоскость</p>
+              <h3 class="model-theory__title" id="theory-lab-title">Движение на плоскости</h3>
+              <p class="model-theory__lead">
+                Полноценная «столешница» <span class="mono">xy</span>: векторы скорости и ускорения, траектории, режим движения вдоль луча или <strong>по заданной ломаной</strong>, расширенные графики и метрики. Всё то же
+                галилеево преобразование — уже для радиус-векторов и векторов скорости.
+              </p>
+            </header>
+
+            <div class="model-theory__body">
+              <section class="theory-card">
+                <h4 class="theory-card__h">О чём эта тема</h4>
+                <p class="theory-card__p">
+                  В плоскости положение описывается парой <span class="mono">(x, y)</span>, скорость — компонентами <span class="mono">(v<sub>x</sub>, v<sub>y</sub>)</span> или модулем и углом. Суперпозиция движений по осям даёт
+                  произвольную прямолинейную траекторию; при постоянном векторе ускорения — парабола в плоскости (общий случай баллистики здесь не обязателен, но закономерность та же).
+                </p>
+              </section>
+
+              <section class="theory-card theory-card--accent">
+                <h4 class="theory-card__h">Лабораторный стенд в интерфейсе</h4>
+                <ul class="theory-list">
+                  <li><span class="theory-list__mark" aria-hidden="true"></span>Вид сверху: оси, машины, следы, опционально — редактирование траектории (луч / путь).</li>
+                  <li><span class="theory-list__mark" aria-hidden="true"></span>Ползунки и поля для <span class="mono">x<sub>0</sub>, y<sub>0</sub></span>, компонент скорости и ускорения или полярный ввод <span class="mono">|v|, θ</span>.</li>
+                  <li><span class="theory-list__mark" aria-hidden="true"></span>Графики <span class="mono">x(t), y(t), v(t)</span>, разность координат, блок метрик в выбранной СО.</li>
+                  <li><span class="theory-list__mark" aria-hidden="true"></span>Переключение дорога / СО <span class="mono">A</span> / <span class="mono">B</span> сразу пересчитывает «штрихованные» величины.</li>
+                </ul>
+              </section>
+
+              <section class="theory-card">
+                <h4 class="theory-card__h">Ключевые формулы</h4>
+                <div class="theory-formula-grid">
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">векторно (лабораторная СО)</span>
+                    <p class="theory-eq__math mono">
+                      <span class="theory-vec">r</span>(t) = <span class="theory-vec">r</span><sub>0</sub> + <span class="theory-vec">v</span><sub>0</sub> t +
+                      <span class="theory-frac"><span class="theory-frac__num"><span class="theory-vec">a</span> t<sup>2</sup></span><span class="theory-frac__den">2</span></span>, &nbsp;
+                      <span class="theory-vec">v</span>(t) = <span class="theory-vec">v</span><sub>0</sub> + <span class="theory-vec">a</span> t
+                    </p>
+                  </div>
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">Галилей в плоскости</span>
+                    <p class="theory-eq__math mono"><span class="theory-vec">r</span>′ = <span class="theory-vec">r</span> − <span class="theory-vec">V</span> t, &nbsp; <span class="theory-vec">v</span>′ = <span class="theory-vec">v</span> − <span class="theory-vec">V</span>, &nbsp; t′ = t</p>
+                    <p class="theory-eq__note"><span class="theory-vec theory-vec--note">V</span> — поступательная скорость выбранной опорной системы (в модели — скорость центра выбранной машины в лабораторной СО).</p>
+                  </div>
+                  <div class="theory-eq theory-eq--wide" role="presentation">
+                    <span class="theory-eq__label">декартовы компоненты</span>
+                    <p class="theory-eq__math mono theory-eq__math--nowrap">x′ = x − V<sub>x</sub> t, &nbsp; y′ = y − V<sub>y</sub> t</p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="theory-card">
+                <h4 class="theory-card__h">Что можно исследовать</h4>
+                <div class="theory-chips">
+                  <span class="theory-chip">Повернуть векторы начальных скоростей и сравнить форму траектории на сцене и на графиках</span>
+                  <span class="theory-chip">Включить режим пути, нарисовать ломаную и проследить, как меняется <span class="mono">s(t)</span> вдоль кривой</span>
+                  <span class="theory-chip">Перейти в СО одной из машин и «поймать» момент, когда вторая описывается простейшими закономерностями</span>
+                  <span class="theory-chip">Сопоставить относительную скорость в проекциях с тем, что вы видите на плоскости</span>
+                </div>
+              </section>
+
+              <aside class="theory-callout theory-callout--violet">
+                <strong class="theory-callout__title">Инструкция наблюдателю</strong>
+                <ol class="theory-steps">
+                  <li>Выберите модель «на плоскости» и задайте начальные скорости; запустите время.</li>
+                  <li>Переключайте систему отсчёта и одновременно смотрите сцену, метрики и графики <span class="mono">x′, y′</span>.</li>
+                  <li>По желанию откройте редактирование траектории: смена режима луч / путь меняет класс задачи — сравните с теорией прямолинейного и криволинейного движения с тем же галилеевым ядром.</li>
+                </ol>
+              </aside>
+            </div>
+          </article>
+        </div>
+
         <div class="sim-column">
           <div class="sim-stage">
             <div class="sim-stage__chrome">
@@ -106,9 +298,132 @@
                 <span class="pill pill--scale">Масштаб времени ×<span id="disp-timescale">1</span></span>
               </div>
             </div>
-            <div class="canvas-wrap">
-              <canvas id="sim-canvas" width="1200" height="520" aria-label="Визуализация движения машин"></canvas>
-              <div class="canvas-overlay" id="canvas-overlay"></div>
+            <div class="canvas-wrap" id="canvas-outer-wrap">
+              <div class="canvas-stack">
+                <div class="canvas-main" id="canvas-main">
+                  <canvas id="sim-canvas" width="1200" height="520" aria-label="Визуализация движения машин"></canvas>
+                  <div class="canvas-overlay" id="canvas-overlay"></div>
+                  <div class="canvas-plane-rails" id="canvas-plane-rails" aria-hidden="true">
+                    <div class="plane-rail-y-wrap">
+                      <span class="plane-rail-caption" id="rail-y-caption">y₀</span>
+                      <input
+                        type="number"
+                        class="plane-rail-value mono plane-rail-num"
+                        id="rail-y0-val"
+                        step="0.1"
+                        min="-80"
+                        max="80"
+                        disabled
+                        aria-label="y₀ выбранной машины, метры"
+                      />
+                      <input
+                        type="range"
+                        class="plane-rail plane-rail--y"
+                        id="rail-y0"
+                        min="-80"
+                        max="80"
+                        step="0.5"
+                        value="0"
+                        disabled
+                        aria-label="Начальная координата y₀ выбранной машины"
+                      />
+                    </div>
+                    <div class="plane-rail-x-wrap">
+                      <input
+                        type="range"
+                        class="plane-rail plane-rail--x"
+                        id="rail-x0"
+                        min="-80"
+                        max="80"
+                        step="0.5"
+                        value="0"
+                        disabled
+                        aria-label="Начальная координата x₀ выбранной машины"
+                      />
+                      <input
+                        type="number"
+                        class="plane-rail-value mono plane-rail-num"
+                        id="rail-x0-val"
+                        step="0.1"
+                        min="-80"
+                        max="80"
+                        disabled
+                        aria-label="x₀ выбранной машины, метры"
+                      />
+                      <span class="plane-rail-caption" id="rail-x-caption">x₀</span>
+                    </div>
+                  </div>
+                  <div id="plane-angle-hud" class="plane-angle-hud" hidden>
+                    <div class="plane-angle-hud__title">θ (°), 0° → +x</div>
+                    <input
+                      type="number"
+                      id="inp-theta-deg"
+                      class="plane-angle-hud__input mono"
+                      min="0"
+                      max="360"
+                      step="0.1"
+                      value="0"
+                      aria-label="Угол направления начальной скорости в градусах"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="plane-path-bar plane-only" id="plane-path-float" hidden>
+              <div class="plane-path-tools" id="plane-path-tools" hidden>
+                <div class="plane-path-section plane-path-section--mode">
+                  <div class="plane-path-section__title">Траектория</div>
+                  <div class="plane-path-box plane-path-box--mode">
+                    <button type="button" class="plane-path-mode-btn" id="btn-path-mode" aria-pressed="false" title="Траектория: включить/выключить">
+                      <span class="plane-path-mode-btn__ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+                      <span class="plane-path-mode-btn__txt">Траектория</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="plane-path-section">
+                  <div class="plane-path-section__title">Инструмент</div>
+                  <div class="plane-path-box">
+                    <div class="segmented segmented--toolbar plane-path-seg" role="group" aria-label="Инструмент редактирования траектории">
+                      <button type="button" class="seg-btn seg-btn--tool" id="tool-path-hand" data-tool="hand" title="Рука: выбрать машину или клик в пустоту, чтобы скрыть разметку">
+                        <span class="tool-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v1M14 10V4a2 2 0 0 0-4 0v6M10 10.5V5a2 2 0 0 0-4 0v9"/><path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg></span>
+                      </button>
+                      <button type="button" class="seg-btn seg-btn--tool is-active" id="tool-path-pen" data-tool="pen" title="Перо: добавить точки кликом">
+                        <span class="tool-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></span>
+                      </button>
+                      <button type="button" class="seg-btn seg-btn--tool" id="tool-path-move" data-tool="move" title="Move: таскать точки и панорамировать (Shift+drag)">
+                        <span class="tool-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3"/><path d="M9 5l3-3 3 3"/><path d="M15 19l-3 3-3-3"/><path d="M19 9l3 3-3 3"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/></svg></span>
+                      </button>
+                      <button type="button" class="seg-btn seg-btn--tool" id="tool-path-erase" data-tool="erase" title="Ластик: удалить точку кликом">
+                        <span class="tool-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="plane-path-section">
+                  <div class="plane-path-section__title">Масштаб</div>
+                  <div class="plane-path-box">
+                    <div class="plane-path-scale">
+                      <button type="button" class="plane-path-sq" id="btn-zoom-minus" title="Уменьшить" aria-label="Уменьшить">−</button>
+                      <input type="range" id="plane-zoom" min="0.6" max="2.6" step="0.05" value="1" aria-label="Масштаб сцены при редактировании" />
+                      <button type="button" class="plane-path-sq" id="btn-zoom-plus" title="Приблизить" aria-label="Приблизить">+</button>
+                      <input type="number" id="plane-zoom-num" class="mono plane-path-num" min="0.6" max="2.6" step="0.1" value="1.0" aria-label="Масштаб сцены числом" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="plane-path-section plane-path-section--actions">
+                  <div class="plane-path-section__title">Действия</div>
+                  <div class="plane-path-box">
+                    <div class="plane-path-actions">
+                      <button type="button" class="plane-path-sq plane-path-sq--big" id="btn-path-undo" title="Undo (отменить)" aria-label="Undo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
+                      <button type="button" class="plane-path-sq plane-path-sq--big" id="btn-path-redo" title="Redo (повторить)" aria-label="Redo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="plane-path-hint" id="plane-path-hint" aria-live="polite"></div>
+              </div>
             </div>
           </div>
 
@@ -116,7 +431,7 @@
             <div class="charts-lab-grid">
               <article class="chart-block">
                 <header class="chart-block__head">
-                  <h4 class="chart-block__title">Положение x(t), лабораторная система</h4>
+                  <h4 class="chart-block__title" id="chart-title-road-xt">Положение x(t), лабораторная система</h4>
                 </header>
                 <div class="chart-block__canvas-wrap">
                   <canvas class="study-canvas" data-chart="road-xt" width="560" height="280" aria-label="График x от t в системе дороги"></canvas>
@@ -124,15 +439,31 @@
               </article>
               <article class="chart-block">
                 <header class="chart-block__head">
-                  <h4 class="chart-block__title">Положение x′(t), выбранная система отсчёта</h4>
+                  <h4 class="chart-block__title" id="chart-title-frame-xt">Положение x′(t), выбранная система отсчёта</h4>
                 </header>
                 <div class="chart-block__canvas-wrap">
                   <canvas class="study-canvas" data-chart="frame-xt" width="560" height="280" aria-label="График x штрих от t в выбранной системе"></canvas>
                 </div>
               </article>
+              <article class="chart-block plane-only">
+                <header class="chart-block__head">
+                  <h4 class="chart-block__title" id="chart-title-road-yt">Положение y(t), лабораторная система</h4>
+                </header>
+                <div class="chart-block__canvas-wrap">
+                  <canvas class="study-canvas" data-chart="road-yt" width="560" height="280" aria-label="График y от t в системе дороги"></canvas>
+                </div>
+              </article>
+              <article class="chart-block plane-only">
+                <header class="chart-block__head">
+                  <h4 class="chart-block__title" id="chart-title-frame-yt">Положение y′(t), выбранная система отсчёта</h4>
+                </header>
+                <div class="chart-block__canvas-wrap">
+                  <canvas class="study-canvas" data-chart="frame-yt" width="560" height="280" aria-label="График y штрих от t в выбранной системе"></canvas>
+                </div>
+              </article>
               <article class="chart-block">
                 <header class="chart-block__head">
-                  <h4 class="chart-block__title">Скорость v(t), лабораторная система</h4>
+                  <h4 class="chart-block__title" id="chart-title-road-vt">Скорость v<sub>x</sub>(t), лабораторная система</h4>
                 </header>
                 <div class="chart-block__canvas-wrap">
                   <canvas class="study-canvas" data-chart="road-vt" width="560" height="280" aria-label="График скорости от времени"></canvas>
@@ -140,7 +471,7 @@
               </article>
               <article class="chart-block">
                 <header class="chart-block__head">
-                  <h4 class="chart-block__title">Разделение Δx(t) = x<sub>B</sub> − x<sub>A</sub></h4>
+                  <h4 class="chart-block__title" id="chart-title-delta">Разделение Δx(t) = x<sub>B</sub> − x<sub>A</sub></h4>
                 </header>
                 <div class="chart-block__canvas-wrap">
                   <canvas class="study-canvas" data-chart="delta-xt" width="560" height="280" aria-label="График разности координат от времени"></canvas>
@@ -159,8 +490,21 @@
                 <dl class="metric-list">
                   <div class="metric-row"><dt>x<sub>A</sub></dt><dd class="mono val-pulse" id="m-xa-road">0.00 м</dd></div>
                   <div class="metric-row"><dt>x<sub>B</sub></dt><dd class="mono val-pulse" id="m-xb-road">0.00 м</dd></div>
-                  <div class="metric-row"><dt>v<sub>A</sub></dt><dd class="mono val-pulse" id="m-va-road">0.00 м/с</dd></div>
-                  <div class="metric-row"><dt>v<sub>B</sub></dt><dd class="mono val-pulse" id="m-vb-road">0.00 м/с</dd></div>
+                  <div class="metric-row plane-only" id="m-row-y-road-a"><dt>y<sub>A</sub></dt><dd class="mono val-pulse" id="m-ya-road">0.00 м</dd></div>
+                  <div class="metric-row plane-only" id="m-row-y-road-b"><dt>y<sub>B</sub></dt><dd class="mono val-pulse" id="m-yb-road">0.00 м</dd></div>
+                  <div class="metric-row"><dt>v<sub>xA</sub></dt><dd class="mono val-pulse" id="m-va-road">0.00 м/с</dd></div>
+                  <div class="metric-row"><dt>v<sub>xB</sub></dt><dd class="mono val-pulse" id="m-vb-road">0.00 м/с</dd></div>
+                  <div class="metric-row plane-only" id="m-row-vy-road-a"><dt>v<sub>yA</sub></dt><dd class="mono val-pulse" id="m-vya-road">0.00 м/с</dd></div>
+                  <div class="metric-row plane-only" id="m-row-vy-road-b"><dt>v<sub>yB</sub></dt><dd class="mono val-pulse" id="m-vyb-road">0.00 м/с</dd></div>
+                  <div class="metric-row plane-only" id="m-row-vs-road"><dt>|v|</dt><dd class="mono val-pulse" id="m-vs-road">0 / 0 м/с</dd></div>
+                  <div class="metric-row">
+                    <dt id="m-dt-aa-road">a<sub>xA</sub></dt>
+                    <dd class="mono" id="m-aa-road">0.00 м/с²</dd>
+                  </div>
+                  <div class="metric-row">
+                    <dt id="m-dt-ab-road">a<sub>xB</sub></dt>
+                    <dd class="mono" id="m-ab-road">0.00 м/с²</dd>
+                  </div>
                 </dl>
               </article>
 
@@ -172,8 +516,12 @@
                 <dl class="metric-list">
                   <div class="metric-row"><dt>x′<sub>A</sub></dt><dd class="mono val-pulse tag-a" id="m-xa-frame">0.00 м</dd></div>
                   <div class="metric-row"><dt>x′<sub>B</sub></dt><dd class="mono val-pulse tag-b" id="m-xb-frame">0.00 м</dd></div>
-                  <div class="metric-row"><dt>v′<sub>A</sub></dt><dd class="mono val-pulse tag-a" id="m-va-frame">0.00 м/с</dd></div>
-                  <div class="metric-row"><dt>v′<sub>B</sub></dt><dd class="mono val-pulse tag-b" id="m-vb-frame">0.00 м/с</dd></div>
+                  <div class="metric-row plane-only" id="m-row-yf-a"><dt>y′<sub>A</sub></dt><dd class="mono val-pulse tag-a" id="m-ya-frame">0.00 м</dd></div>
+                  <div class="metric-row plane-only" id="m-row-yf-b"><dt>y′<sub>B</sub></dt><dd class="mono val-pulse tag-b" id="m-yb-frame">0.00 м</dd></div>
+                  <div class="metric-row"><dt>v′<sub>xA</sub></dt><dd class="mono val-pulse tag-a" id="m-va-frame">0.00 м/с</dd></div>
+                  <div class="metric-row"><dt>v′<sub>xB</sub></dt><dd class="mono val-pulse tag-b" id="m-vb-frame">0.00 м/с</dd></div>
+                  <div class="metric-row plane-only" id="m-row-vyf-a"><dt>v′<sub>yA</sub></dt><dd class="mono val-pulse tag-a" id="m-vya-frame">0.00 м/с</dd></div>
+                  <div class="metric-row plane-only" id="m-row-vyf-b"><dt>v′<sub>yB</sub></dt><dd class="mono val-pulse tag-b" id="m-vyb-frame">0.00 м/с</dd></div>
                 </dl>
               </article>
 
@@ -183,8 +531,12 @@
                   <p class="metric-card__sub">Связь кинематических величин</p>
                 </header>
                 <dl class="metric-list">
-                  <div class="metric-row"><dt>v<sub>отн</sub> = v<sub>A</sub> − v<sub>B</sub></dt><dd class="mono val-pulse" id="m-vrel-card">0.00 м/с</dd></div>
-                  <div class="metric-row"><dt>Δx = x<sub>B</sub> − x<sub>A</sub></dt><dd class="mono val-pulse" id="m-dx">0.00 м</dd></div>
+                  <div class="metric-row"><dt id="m-dt-vrel">v<sub>отн,x</sub> = v<sub>xA</sub> − v<sub>xB</sub></dt><dd class="mono val-pulse" id="m-vrel-card">0.00 м/с</dd></div>
+                  <div class="metric-row plane-only" id="m-row-vrel-y"><dt>v<sub>отн,y</sub></dt><dd class="mono val-pulse" id="m-vrel-y-card">0.00 м/с</dd></div>
+                  <div class="metric-row plane-only" id="m-row-vrel-mag"><dt>|v<sub>отн</sub>|</dt><dd class="mono val-pulse" id="m-vrel-mag-card">0.00 м/с</dd></div>
+                  <div class="metric-row"><dt id="m-dt-dx">Δx = x<sub>B</sub> − x<sub>A</sub></dt><dd class="mono val-pulse" id="m-dx">0.00 м</dd></div>
+                  <div class="metric-row plane-only" id="m-row-dy"><dt>Δy</dt><dd class="mono val-pulse" id="m-dy">0.00 м</dd></div>
+                  <div class="metric-row plane-only" id="m-row-dr"><dt>|Δr|</dt><dd class="mono val-pulse" id="m-dr">0.00 м</dd></div>
                   <div class="metric-row metric-row--note"><dt></dt><dd id="m-frame-note" class="metric-note">В системе машины выбранный автомобиль имеет нулевую скорость.</dd></div>
                 </dl>
               </article>
@@ -193,6 +545,13 @@
         </div>
 
         <aside class="panel panel--controls">
+          <div class="panel__block">
+            <h3 class="panel__title">Кинематика</h3>
+            <p class="panel__micro">
+              Размерность сцены задаётся переключателем над симуляцией: <strong>движение на плоскости</strong> — плоскость
+              <span class="mono">xy</span> и расширенные графики; <strong>движение по прямой</strong> — только одна ось дороги с теми же законами Галилея в выбранной СО.
+            </p>
+          </div>
           <div class="panel__block">
             <h3 class="panel__title">Управление воспроизведением</h3>
             <div class="transport">
@@ -245,36 +604,56 @@
               <button type="button" class="frame-btn" data-frame="b" role="tab" aria-selected="false">Машина B</button>
             </div>
             <div class="relative-meter">
-              <div class="relative-meter__label">Скорость A относительно B</div>
+              <div class="relative-meter__label" id="disp-vrel-label">Скорость A относительно B (по оси x)</div>
               <div class="relative-meter__value mono" id="disp-vrel">0.00 м/с</div>
+              <div class="relative-meter__sub mono plane-only" id="disp-vrel-plane"></div>
               <div class="relative-meter__bar"><div class="relative-meter__fill" id="vrel-fill"></div></div>
             </div>
           </div>
 
-          <div class="panel__block">
-            <h3 class="panel__title">Начальные условия (дорога)</h3>
+          <div class="panel__block" id="block-initial-line">
+            <h3 class="panel__title" id="block-initial-title">Начальные условия (дорога)</h3>
             <div class="sliders-grid">
-              <label class="slider-field">
+              <label class="slider-field hide-on-plane">
                 <span class="slider-field__top"><span class="tag tag--a">A</span> Начальное положение x₀<sub>A</sub> (м)</span>
                 <input type="range" id="x0a" min="-80" max="80" step="0.5" value="-20" />
-                <span class="mono slider-field__val" id="val-x0a">-20.0</span>
+                <input type="number" class="mono slider-field__num" id="val-x0a" min="-80" max="80" step="0.1" value="-20" aria-label="Число x₀ A, м" />
               </label>
-              <label class="slider-field">
+              <label class="slider-field hide-on-plane">
                 <span class="slider-field__top"><span class="tag tag--b">B</span> Начальное положение x₀<sub>B</sub> (м)</span>
                 <input type="range" id="x0b" min="-80" max="80" step="0.5" value="25" />
-                <span class="mono slider-field__val" id="val-x0b">25.0</span>
+                <input type="number" class="mono slider-field__num" id="val-x0b" min="-80" max="80" step="0.1" value="25" aria-label="Число x₀ B, м" />
               </label>
               <label class="slider-field">
-                <span class="slider-field__top"><span class="tag tag--a">A</span> Скорость v<sub>A</sub> (м/с)</span>
+                <span class="slider-field__top" id="label-va"><span class="tag tag--a">A</span> Скорость v<sub>A</sub> (м/с)</span>
                 <input type="range" id="va" min="-35" max="35" step="0.5" value="12" />
-                <span class="mono slider-field__val" id="val-va">12.0</span>
+                <input type="number" class="mono slider-field__num" id="val-va" min="-35" max="35" step="0.1" value="12" aria-label="Число v A" />
               </label>
               <label class="slider-field">
-                <span class="slider-field__top"><span class="tag tag--b">B</span> Скорость v<sub>B</sub> (м/с)</span>
+                <span class="slider-field__top" id="label-vb"><span class="tag tag--b">B</span> Скорость v<sub>B</sub> (м/с)</span>
                 <input type="range" id="vb" min="-35" max="35" step="0.5" value="5" />
-                <span class="mono slider-field__val" id="val-vb">5.0</span>
+                <input type="number" class="mono slider-field__num" id="val-vb" min="-35" max="35" step="0.1" value="5" aria-label="Число v B" />
+              </label>
+              <label class="slider-field">
+                <span class="slider-field__top" id="label-aa"><span class="tag tag--a">A</span> Ускорение a<sub>xA</sub> (м/с²)</span>
+                <input type="range" id="aa" min="-15" max="15" step="0.5" value="0" />
+                <input type="number" class="mono slider-field__num" id="val-aa" min="-15" max="15" step="0.1" value="0" aria-label="Число ускорения A" />
+              </label>
+              <label class="slider-field">
+                <span class="slider-field__top" id="label-ab"><span class="tag tag--b">B</span> Ускорение a<sub>xB</sub> (м/с²)</span>
+                <input type="range" id="ab" min="-15" max="15" step="0.5" value="0" />
+                <input type="number" class="mono slider-field__num" id="val-ab" min="-15" max="15" step="0.1" value="0" aria-label="Число ускорения B" />
               </label>
             </div>
+          </div>
+
+          <div class="panel__block plane-only" id="block-plane-panel">
+            <h3 class="panel__title">Плоскость: сцена</h3>
+            <p class="panel__micro">
+              Выберите машину на поле (в СО «дорога»). Слева и снизу у <strong>окна симуляции</strong> появятся ползунки <strong>y₀</strong> и <strong>x₀</strong>. Направление
+              <strong>v₀</strong> — тонкая окружность и луч; перетащите вдоль дуги. Четыре ползунка выше: |v₀| для A и B и ускорение <strong>вдоль этого же направления</strong> для каждой машины (прямолинейное движение).
+            </p>
+            <p class="plane-selection mono" id="plane-selection-label">Машина не выбрана</p>
           </div>
 
           <div class="panel__block">
@@ -286,6 +665,9 @@
               <button type="button" class="preset-btn" data-preset="headon">Навстречу друг другу</button>
               <button type="button" class="preset-btn" data-preset="faster">Одна быстрее</button>
               <button type="button" class="preset-btn" data-preset="negative">Обратное направление</button>
+              <button type="button" class="preset-btn plane-only" data-preset="plane-cross">Плоскость · перекрёст</button>
+              <button type="button" class="preset-btn plane-only" data-preset="plane-overtake">Плоскость · обгон по дуге</button>
+              <button type="button" class="preset-btn plane-only" data-preset="plane-drift">Плоскость · занос с ускорением</button>
             </div>
           </div>
 
@@ -299,7 +681,12 @@
             <label class="toggle">
               <input type="checkbox" id="chk-relative" checked />
               <span class="toggle__ui"></span>
-              <span class="toggle__text">Подсвечивать относительную координату Δx</span>
+              <span class="toggle__text" id="chk-relative-text">Подсвечивать относительное расстояние</span>
+            </label>
+            <label class="toggle plane-only" id="wrap-chk-delta-legs">
+              <input type="checkbox" id="chk-delta-legs" checked />
+              <span class="toggle__ui"></span>
+              <span class="toggle__text" id="chk-delta-legs-text">Катеты Δx′ и Δy′ на сцене (|Δr′| не гасится)</span>
             </label>
             <label class="toggle">
               <input type="checkbox" id="chk-tooltips" />
@@ -308,6 +695,349 @@
             </label>
           </div>
         </aside>
+
+        <section id="longread-c-root" class="longread-c" hidden aria-label="Лонгрид «Почему мы никогда не достигнем скорости света»">
+          <header class="ls-hero">
+            <p class="ls-hero__eyebrow">Лонгрид · специальная теория относительности</p>
+            <h2 class="ls-hero__title">
+              <span class="ls-hero__line">Почему мы никогда</span>
+              <span class="ls-hero__line ls-hero__line--accent">не достигнем скорости света</span>
+            </h2>
+            <p class="ls-hero__lead">
+              Мы можем приближаться к скорости света сколь угодно близко. Но достичь её невозможно. Почему?
+            </p>
+            <div class="ls-hero__chips" aria-hidden="true">
+              <span class="ls-hero__chip">фотонные часы</span>
+              <span class="ls-hero__chip">фактор Лоренца</span>
+              <span class="ls-hero__chip">мионы</span>
+              <span class="ls-hero__chip">рапидность</span>
+              <span class="ls-hero__chip">релятивистская энергия</span>
+            </div>
+          </header>
+
+          <!-- ======== Глава 1 ======== -->
+          <article class="ls-chapter" data-ls-chapter="1" id="ls-chapter-1">
+            <header class="ls-chapter__head">
+              <p class="ls-kicker">Глава 1 · постановка вопроса</p>
+              <h3 class="ls-title">Популярное объяснение, которое ничего не объясняет</h3>
+            </header>
+            <div class="ls-text">
+              <p>
+                Если вы когда-нибудь спрашивали «почему нельзя разогнаться до скорости света», то наверняка слышали стандартный ответ. Берётся формула релятивистской кинетической энергии:
+              </p>
+              <p class="ls-formula" role="presentation">
+                K = (γ&thinsp;&minus;&thinsp;1)&thinsp;·&thinsp;m&thinsp;c<sup>2</sup>
+              </p>
+              <p>
+                Строится её график. На отметке <span class="mono">v = c</span> энергия уходит в бесконечность. Вывод: чтобы достичь скорости света, нужна бесконечная энергия. Её не существует. Точка.
+              </p>
+              <p>
+                Это математически верно. Но это не объяснение. Это просто пересказ формулы. Из такого ответа непонятно, <em>что именно физически</em> мешает ракете разгоняться дальше. Почему энергия вообще стремится к бесконечности? Что там происходит?
+              </p>
+              <p>
+                Вот на этот вопрос мы и хотим ответить. И чтобы разобраться, мы пойдём другим путём. Не от формулы, а к формуле. Начнём с одного экспериментального факта о свете, построим из него цепочку рассуждений и в конце увидим, что бесконечная энергия получается сама, как следствие. Не как аксиома, а как результат.
+              </p>
+            </div>
+            <div class="ls-stage" data-ls-stage="kenergy" aria-label="Интерактивный график кинетической энергии"></div>
+            <aside class="ls-takeaway">
+              <strong class="ls-takeaway__title">Микро-вывод</strong>
+              <p>
+                График <span class="mono">K(v)</span> и правда уходит в бесконечность при <span class="mono">v → c</span>. Но почему он так устроен? Для ответа нужно копнуть глубже. Начнём с одного факта о свете.
+              </p>
+            </aside>
+          </article>
+
+          <!-- ======== Глава 2 ======== -->
+          <article class="ls-chapter" data-ls-chapter="2" id="ls-chapter-2">
+            <header class="ls-chapter__head">
+              <p class="ls-kicker">Глава 2 · единственный факт</p>
+              <h3 class="ls-title">Скорость света одинакова для всех</h3>
+            </header>
+            <div class="ls-text">
+              <p>
+                В повседневной жизни скорости складываются. Бросьте мяч из движущейся машины. Наблюдатель на обочине увидит скорость мяча плюс скорость машины. Это знакомое из школы сложение скоростей, и оно отлично работает на бытовых масштабах.
+              </p>
+              <p>
+                Со светом такое не работает. Если из той же машины включить фонарик, наблюдатель на обочине измерит ту же самую скорость света <span class="mono">c</span>, а не <span class="mono">c + v</span>. Неважно, стоите вы на месте или мчитесь со скоростью 100 000 км/с. Вы всё равно измерите одну и ту же скорость света.
+              </p>
+              <p>
+                Это не теория, это наблюдаемый факт, проверенный множеством экспериментов, от опытов Майкельсона-Морли в XIX веке до современных лазерных лабораторий. Свет не складывается ни с чем. Его скорость всегда одна и та же.
+              </p>
+              <p>
+                Точное правило сложения скоростей в теории относительности записывается так:
+              </p>
+              <p class="ls-formula" role="presentation">
+                u′ =
+                <span class="theory-frac"><span class="theory-frac__num">u + v</span><span class="theory-frac__den">1 + uv/c<sup>2</sup></span></span>
+              </p>
+              <p>
+                При обычных скоростях поправка <span class="mono">uv/c²</span> ничтожно мала, и формула превращается в школьное <span class="mono">u + v</span>. Но если подставить <span class="mono">u = c</span>, знаменатель сделает ровно то, что нужно: результат останется равным <span class="mono">c</span>. Сколько ни прибавляй, скорость света не увеличивается.
+              </p>
+              <p>
+                Окей, скажете вы. Ну и что? Свет особенный. Как это связано с ракетой? Чтобы увидеть связь, нам нужен один инструмент.
+              </p>
+            </div>
+            <div class="ls-stage" data-ls-stage="velocity-addition" aria-label="Интерактивная демонстрация: фотоны от фонаря и движущейся машины летят с одинаковой скоростью"></div>
+            <aside class="ls-takeaway">
+              <strong class="ls-takeaway__title">Микро-вывод</strong>
+              <p>
+                Скорость света ведёт себя как предельная. К ней нельзя ничего прибавить. Дальше посмотрим, какие у этого последствия для времени.
+              </p>
+            </aside>
+          </article>
+
+          <!-- ======== Глава 3 ======== -->
+          <article class="ls-chapter" data-ls-chapter="3" id="ls-chapter-3">
+            <header class="ls-chapter__head">
+              <p class="ls-kicker">Глава 3 · ключевой инструмент</p>
+              <h3 class="ls-title">Фотонные часы и замедление времени</h3>
+            </header>
+            <div class="ls-text">
+              <p>
+                Вы, наверное, сейчас думаете: зачем мне какие-то выдуманные часы? Давайте говорить о реальных вещах. Но если вы поймёте фотонные часы, вы поймёте всё остальное. Доверьтесь.
+              </p>
+              <p>
+                Итак, <strong>фотонные часы</strong>. Два зеркала друг напротив друга, и фотон, который прыгает между ними вверх-вниз. Каждый раз, когда фотон касается зеркала, считаем за один тик.
+              </p>
+              <p>
+                Теперь мысленный эксперимент. Вы стоите в открытом космосе. В руках у вас такие часы. Вы не движетесь, фотон внутри летит строго вертикально: вверх, вниз, вверх, вниз. Путь за один тик равен <span class="mono">2L</span>, период:
+              </p>
+              <p class="ls-formula" role="presentation">
+                T<sub>0</sub> = 2L / c
+              </p>
+              <p>
+                Мимо вас пролетает ракета. Внутри неё точно такие же часы. Но вы замечаете кое-что странное. Пока фотон внутри ракеты летит от одного зеркала к другому, сама ракета успевает сместиться вперёд. Поэтому с вашей точки зрения фотон движется уже не вертикально, а по <em>диагонали</em>. Он одновременно летит вверх и вперёд, вместе с ракетой.
+              </p>
+              <p>
+                Этот диагональный путь длиннее вертикального. Но скорость фотона при этом не меняется. Она в обоих случаях равна <span class="mono">c</span>. Путь стал длиннее, скорость осталась прежней, а значит, на один тик уходит больше времени. Часы внутри ракеты тикают <em>медленнее</em>, чем ваши.
+              </p>
+              <p>
+                Вот это и есть замедление времени. Пока у вас прошло восемь тиков, вы видите, что в ракете прошло только четыре. Время внутри движущейся ракеты буквально течёт медленнее. И это следует из одного-единственного факта: скорость света одинакова для всех.
+              </p>
+            </div>
+            <div class="ls-stage" data-ls-stage="photon-clock" aria-label="Сравнение покоящихся и движущихся фотонных часов"></div>
+            <aside class="ls-takeaway">
+              <strong class="ls-takeaway__title">Микро-вывод</strong>
+              <p>
+                Если скорость света <span class="mono">c</span> одинакова для всех, то время в движущейся системе обязано идти медленнее. Это не свойство каких-то конкретных часов. Это геометрический факт.
+              </p>
+            </aside>
+          </article>
+
+          <!-- ======== Глава 4 ======== -->
+          <article class="ls-chapter" data-ls-chapter="4" id="ls-chapter-4">
+            <header class="ls-chapter__head">
+              <p class="ls-kicker">Глава 4 · обычные часы тоже</p>
+              <h3 class="ls-title">Почему замедляются любые часы, а не только фотонные</h3>
+            </header>
+            <div class="ls-text">
+              <p>
+                Хорошо, но что с обычными часами? Почему они тоже замедляются? Видите ли, когда секундная стрелка движется, нам кажется, что все атомы перемещаются одновременно, как единое целое. На самом деле работает немного по-другому.
+              </p>
+              <p>
+                Сигнал о перемещении передаётся от атома к атому. Стрелка поворачивается постепенно. Первый атом передаёт сигнал второму, второй третьему, и так далее. Этот сигнал можно считать за фотон. И если часы движутся, этот фотон тоже летит по диагонали.
+              </p>
+              <p>
+                Расстояние, как и в прошлом примере, здесь больше. А значит, и времени для передачи нужно больше. И именно поэтому часы идут медленнее. В кварцевых часах колеблется кристалл. В электронных бегут заряды по схеме. Не важно, какой механизм. Предельная скорость передачи любого взаимодействия всё равно <span class="mono">c</span>. Если весь механизм движется, пути сигналов удлиняются одинаково.
+              </p>
+            </div>
+            <div class="ls-stage" data-ls-stage="atom-chain" aria-label="Цепочка атомов с бегущим сигналом"></div>
+            <aside class="ls-takeaway">
+              <strong class="ls-takeaway__title">Микро-вывод</strong>
+              <p>
+                Замедляется не «один тип часов», а сама длительность любого процесса, в котором что-то передаётся быстрее, чем мгновенно. То есть любого процесса вообще.
+              </p>
+            </aside>
+          </article>
+
+          <!-- ======== Глава 5 ======== -->
+          <article class="ls-chapter" data-ls-chapter="5" id="ls-chapter-5">
+            <header class="ls-chapter__head">
+              <p class="ls-kicker">Глава 5 · подтверждение в природе</p>
+              <h3 class="ls-title">Мионы из верхних слоёв атмосферы</h3>
+            </header>
+            <div class="ls-text">
+              <p>
+                Замедление времени не теоретическая абстракция. Его измеряют каждый день. В верхних слоях атмосферы при столкновении с космическим излучением рождаются <strong>мионы</strong>. Нестабильные частицы с периодом полураспада около <span class="mono">1.56&thinsp;мкс</span>. За это время даже на скорости света мион успевает пролететь меньше полукилометра.
+              </p>
+              <p>
+                Атмосфера, где они рождаются, это около <span class="mono">15&thinsp;км</span>. По классическим расчётам до уровня моря должна долетать ничтожная доля мионов. Но на практике детекторы регистрируют их куда больше, чем предсказывает классика.
+              </p>
+              <p>
+                Причина простая. Мионы летят к нам почти со скоростью света. Их внутренние часы замедлились. Для нас, наблюдателей на земле, их срок жизни вырос в <span class="mono">γ</span> раз. Они буквально живут дольше, потому что их время течёт медленнее. И успевают долететь.
+              </p>
+            </div>
+            <div class="ls-stage" data-ls-stage="muons" aria-label="Поток мионов через атмосферу: классический и релятивистский расчёты"></div>
+            <aside class="ls-takeaway">
+              <strong class="ls-takeaway__title">Микро-вывод</strong>
+              <p>
+                Замедление времени это не философия. Это измеряемая статистика. Если бы его не было, мы бы видели в детекторах совсем другое число мионов.
+              </p>
+            </aside>
+          </article>
+
+          <!-- ======== Глава 6 ======== -->
+          <article class="ls-chapter" data-ls-chapter="6" id="ls-chapter-6">
+            <header class="ls-chapter__head">
+              <p class="ls-kicker">Глава 6 · все процессы сразу</p>
+              <h3 class="ls-title">Замедляется не «время», а вообще всё</h3>
+            </header>
+            <div class="ls-text">
+              <p>
+                Замедляются колебания, реакции, распады, передача взаимодействий. Вообще всё, что можно использовать как меру времени. И в одинаковое число раз. Поэтому наблюдатель, который движется вместе с системой, этого не замечает. Для него часы идут совершенно нормально, как и все остальные процессы вокруг. Внутри просто не с чем сравнить.
+              </p>
+              <p>
+                Заметить замедление можно, только сравнив с другой системой отсчёта. Именно поэтому близнец на быстрой ракете, вернувшись на Землю, окажется моложе своего брата. Пока ракета летела, в ней все процессы шли медленнее. Внутри ракеты экипаж этого не чувствовал, для них время шло обычно. Просто на Земле его прошло больше.
+              </p>
+              <p>
+                Тут мы подходим к границе между физикой и философией. Замедляется ли само время как нечто отдельное? Или речь просто о том, что замедляются все процессы и взаимодействия? На практике эти две формулировки неразличимы. Мы не можем отделить «само время» от физических процессов, которыми его измеряем. Поэтому физики и говорят коротко: время замедляется.
+              </p>
+            </div>
+            <div class="ls-stage" data-ls-stage="all-processes" aria-label="Сравнение пяти процессов в покое и в движении"></div>
+            <aside class="ls-takeaway">
+              <strong class="ls-takeaway__title">Микро-вывод</strong>
+              <p>
+                «Замедление времени» это удобная формулировка для того, что одинаково замедляется любой физический процесс. Само понятие времени неотделимо от процессов, которыми его измеряют.
+              </p>
+            </aside>
+          </article>
+
+          <!-- ======== Глава 7 ======== -->
+          <article class="ls-chapter" data-ls-chapter="7" id="ls-chapter-7">
+            <header class="ls-chapter__head">
+              <p class="ls-kicker">Глава 7 · вывод формулы</p>
+              <h3 class="ls-title">Прямоугольный треугольник и фактор Лоренца</h3>
+            </header>
+            <div class="ls-text">
+              <p>
+                Давайте выведем конкретную формулу. Как именно замедляется время в зависимости от скорости?
+              </p>
+              <p>
+                Вспомним, что расстояние = скорость × время. В системе корабля фотон движется вертикально. Назовём это время маленькое <span class="mono">T</span>. Фотон проходит путь <span class="mono">cT</span>. Снаружи фотон летит по диагонали. Это время <span class="mono">T′</span>, оно длиннее. Горизонтальная составляющая: скорость корабля, умноженная на <span class="mono">T′</span>.
+              </p>
+              <p>
+                Вертикальный катет <span class="mono">cT</span>, горизонтальный катет <span class="mono">vT′</span>, гипотенуза <span class="mono">cT′</span>. По теореме Пифагора:
+              </p>
+              <p class="ls-formula" role="presentation">
+                (cT′)<sup>2</sup> = (cT)<sup>2</sup> + (vT′)<sup>2</sup>
+              </p>
+              <p>
+                Решаем относительно <span class="mono">T′</span> и получаем:
+              </p>
+              <p class="ls-formula" role="presentation">
+                T′ =
+                <span class="theory-frac"><span class="theory-frac__num">T</span><span class="theory-frac__den">√(1 &minus; v<sup>2</sup>/c<sup>2</sup>)</span></span>
+              </p>
+              <p>
+                Знаменатель этой дроби называют <strong>фактором Лоренца</strong> и обозначают <span class="mono">γ</span>. Тогда коротко:
+              </p>
+              <p class="ls-formula ls-formula--mint" role="presentation">
+                T′ = γ · T
+              </p>
+              <p>
+                Число <span class="mono">γ</span> показывает, во сколько раз замедляется время в движущемся объекте. Например, при 50% от скорости света время замедляется в 1,15 раза. При 99,9% уже в 22 раза.
+              </p>
+            </div>
+            <div class="ls-stage" data-ls-stage="pythagoras" aria-label="Прямоугольный треугольник cT, vT′, cT′ и пошаговый вывод γ"></div>
+            <aside class="ls-takeaway">
+              <strong class="ls-takeaway__title">Микро-вывод</strong>
+              <p>
+                Фактор Лоренца не «эмпирическая константа из формулы». Это просто длина гипотенузы, делённая на длину вертикального катета. Чистая геометрия.
+              </p>
+            </aside>
+          </article>
+
+          <!-- ======== Глава 8 ======== -->
+          <article class="ls-chapter" data-ls-chapter="8" id="ls-chapter-8">
+            <header class="ls-chapter__head">
+              <p class="ls-kicker">Глава 8 · поведение γ</p>
+              <h3 class="ls-title">Как γ растёт при приближении к скорости света</h3>
+            </header>
+            <div class="ls-text">
+              <p>
+                Подставим конкретные числа. При <span class="mono">v = 0.5c</span> фактор <span class="mono">γ ≈ 1.15</span>. Почти незаметно. При <span class="mono">0.9c</span> уже <span class="mono">γ ≈ 2.29</span>. При <span class="mono">0.99c</span> около <span class="mono">7.09</span>. При <span class="mono">0.999c</span> около <span class="mono">22.37</span>.
+              </p>
+              <p>
+                Видите, что происходит? Кривая <span class="mono">γ(v)</span> долгое время ведёт себя вполне спокойно, а потом у самой отметки <span class="mono">v = c</span> взлетает почти вертикально вверх. Чем ближе скорость к <span class="mono">c</span>, тем сильнее замедляется время. И тем «дороже» обходится каждый следующий прирост скорости.
+              </p>
+              <p>
+                Вот тут уже начинает вырисовываться ответ на наш главный вопрос.
+              </p>
+            </div>
+            <div class="ls-stage" data-ls-stage="gamma-plot" aria-label="График фактора Лоренца с движущейся точкой и таблицей значений"></div>
+            <aside class="ls-takeaway">
+              <strong class="ls-takeaway__title">Микро-вывод</strong>
+              <p>
+                <span class="mono">γ</span> почти не растёт на низких скоростях и взрывообразно растёт у самой <span class="mono">c</span>. Все «странные» эффекты теории относительности заметны только в правой части графика.
+              </p>
+            </aside>
+          </article>
+
+          <!-- ======== Глава 9 ======== -->
+          <article class="ls-chapter" data-ls-chapter="9" id="ls-chapter-9">
+            <header class="ls-chapter__head">
+              <p class="ls-kicker">Глава 9 · главный финал</p>
+              <h3 class="ls-title">Почему ракета не сможет достичь скорости света</h3>
+            </header>
+            <div class="ls-text">
+              <p>
+                Теперь соберём всё вместе. Представьте ракету, которая разгоняется. Для пилота внутри всё нормально. Двигатель работает, топливо сгорает, ускорение есть. Постоянное, комфортное, как земное <span class="mono">g&thinsp;≈&thinsp;9.8&thinsp;м/с²</span>.
+              </p>
+              <p>
+                Но мы смотрим на эту ракету снаружи. И видим другое. Из-за замедления времени все процессы внутри ракеты идут всё медленнее. В том числе и работа двигателя. Поэтому с нашей точки зрения ракета разгоняется всё медленнее и медленнее.
+              </p>
+              <p>
+                Замечает ли это экипаж? Нет. Для них всё абсолютно обычно. Замедляется сразу всё: часы, тело, мысли, все физические процессы. Внутри просто не с чем сравнить.
+              </p>
+              <p>
+                Тогда в чём проблема? Экипаж может продолжать разгоняться сколько угодно долго. Но если измерять скорость относительно Земли, она растёт всё медленнее. Каждый следующий прирост требует всё больше энергии. И чем ближе к скорости света, тем сильнее этот эффект. В пределе нужен бесконечный запас.
+              </p>
+              <p>
+                Точное решение этой задачи даёт формулы через рапидность <span class="mono">η = aτ/c</span>:
+              </p>
+              <p class="ls-formula" role="presentation">
+                v(τ) = c · tanh(aτ/c)
+              </p>
+              <p class="ls-formula" role="presentation">
+                t<sub>Земли</sub>(τ) =
+                <span class="theory-frac"><span class="theory-frac__num">c</span><span class="theory-frac__den">a</span></span>
+                · sinh(aτ/c)
+              </p>
+              <p class="ls-formula" role="presentation">
+                γ(τ) = cosh(aτ/c)
+              </p>
+              <p>
+                Гиперболический тангенс <span class="mono">tanh</span> по своей природе никогда не пересекает единицу. А значит, <span class="mono">v(τ)</span> никогда не достигнет <span class="mono">c</span>. Сколько бы ни длился полёт по бортовым часам, скорость относительно Земли лишь бесконечно приближается к <span class="mono">c</span>.
+              </p>
+              <p>
+                И вот теперь становится понятным график из первой главы. Кинетическая энергия уходит в бесконечность не как «магическое условие». Просто каждый следующий <span class="mono">+0.1c</span> обходится всё дороже, потому что внутренние процессы ракеты замедляются всё сильнее, и «стоимость» разгона растёт пропорционально.
+              </p>
+              <p>
+                Причина в том, что скорость света это предельная скорость передачи любого воздействия и информации в нашей Вселенной. Поэтому объект с массой может к ней только приближаться, но не достичь.
+              </p>
+            </div>
+            <div class="ls-stage" data-ls-stage="rocket" aria-label="Симулятор разгона ракеты с постоянным собственным ускорением"></div>
+            <aside class="ls-takeaway">
+              <strong class="ls-takeaway__title">Микро-вывод</strong>
+              <p>
+                Скорость света недостижима не потому, что «не хватает энергии». Геометрия пространства-времени устроена так, что <span class="mono">v = c · tanh(aτ/c)</span> всегда строго меньше <span class="mono">c</span>. Бесконечная энергия это уже следствие.
+              </p>
+            </aside>
+          </article>
+
+          <footer class="ls-outro">
+            <h3 class="ls-outro__title">Что мы выяснили</h3>
+            <p class="ls-outro__p">
+              Скорость света это не «ещё одна большая скорость». Это предельная скорость передачи любого воздействия и любой информации во Вселенной. Любой внутренний процесс, от хода часов до работы двигателя, упирается в этот предел. По мере приближения к <span class="mono">c</span> все внутренние процессы для внешнего наблюдателя замедляются.
+            </p>
+            <p class="ls-outro__p">
+              Массивный объект может только асимптотически приближаться к <span class="mono">c</span>, никогда её не достигая. Бесконечная энергия из «популярного объяснения» это не стартовая аксиома, а следствие того, что свет ведёт себя одинаково для всех. С этого факта мы начали, к нему и вернулись.
+            </p>
+            <p class="ls-outro__back">
+              <a class="ls-outro__link" href="#ls-chapter-1">К началу лонгрида</a>
+            </p>
+          </footer>
+        </section>
       </div>
     </section>
   </main>
@@ -319,6 +1049,6 @@
 
   <div class="toast" id="toast-hint" role="status" aria-live="polite" hidden></div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=23"></script>
 </body>
 </html>
