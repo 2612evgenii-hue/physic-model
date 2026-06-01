@@ -5893,8 +5893,8 @@
   // GLAVA 5: Muons
   // ============================================================
   function createMuons(host) {
-    host.appendChild(makeStageHead("Поток мионов: классика и СТО"));
-    const canvas = el("canvas", { "aria-label": "Атмосфера и поток мионов вниз" });
+    host.appendChild(makeStageHead("Поток мюонов: классика и СТО"));
+    const canvas = el("canvas", { "aria-label": "Атмосфера и поток мюонов вниз" });
     host.appendChild(makeCanvasWrap(canvas));
 
     const slH = makeSlider({
