@@ -7274,16 +7274,19 @@
     }
 
     // --- Earth: large hemisphere at start, shrinks to small full circle ---
-    function drawEarthHemisphere(ctx, laneH, beta) {
+    function drawEarthHemisphere(ctx, laneH, beta, xLightYears) {
       // At beta=0: big hemisphere, center at left edge (half visible).
       // As beta grows: Earth shrinks AND slides right so full circle is visible.
+      // After beta saturates near 1, distance-based shrinking continues (log scale).
       const maxR = laneH * 0.65;
       const minR = 8;
-      // Плавный shrink: квадратичный закон — на малых скоростях Земля уменьшается медленно,
-      // ускоряясь к высоким. Это делает старт при a=9.8 более натуральным.
       const rawShrink = beta > 0 ? Math.min(1, beta) : 0;
-      const shrink = rawShrink * rawShrink;  // quadratic — more gradual at low beta
-      const r = maxR - (maxR - minR) * shrink;
+      const shrink = rawShrink * rawShrink;
+      const baseR = maxR - (maxR - minR) * shrink;
+      // Distance-based continued shrinking: log scale gives natural deceleration.
+      // Earth keeps getting smaller as rocket moves further, but the rate decreases.
+      const distFactor = 1 / (1 + Math.log(1 + (xLightYears || 0)) * 0.25);
+      const r = Math.max(3, baseR * distFactor);
       // cx transitions from -r*0.05 (hemisphere, center near edge) to r+6 (full circle visible)
       const cx = lerp(-r * 0.05, r + 6, shrink);
       const cy = laneH * 0.5;
@@ -7323,11 +7326,13 @@
         });
       }
 
-      // Label
-      ctx.fillStyle = "rgba(255,255,255,0.8)";
-      ctx.font = r > 25 ? "11px Outfit" : "9px Outfit";
-      ctx.textAlign = "center";
-      ctx.fillText("Земля", Math.max(cx, r + 6), cy + r + (r > 25 ? 14 : 9));
+      // Label (hide when Earth is too small)
+      if (r > 5) {
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+        ctx.font = r > 25 ? "11px Outfit" : "9px Outfit";
+        ctx.textAlign = "center";
+        ctx.fillText("Земля", Math.max(cx, r + 6), cy + r + (r > 25 ? 14 : 9));
+      }
 
       return { cx, cy, r };
     }
@@ -7495,8 +7500,9 @@
       ctx.textAlign = "left";
       ctx.fillText("Наблюдатель на Земле", 12, 18);
 
-      // Earth hemisphere (large, shrinks with speed)
-      const earth = drawEarthHemisphere(ctx, laneH, ph.beta);
+      // Earth hemisphere (large, shrinks with speed and distance)
+      const xLY = ph.xMeters / M_PER_LIGHTYEAR;
+      const earth = drawEarthHemisphere(ctx, laneH, ph.beta, xLY);
 
       // Light barrier (right edge) — dashed line labeled "c"
       const barrierX = laneW - 24;
